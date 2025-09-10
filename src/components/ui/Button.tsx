@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type MotionButtonProps = React.ComponentPropsWithoutRef<typeof motion.button>;
+
+interface ButtonProps extends Omit<MotionButtonProps, 'variant' | 'size'> {
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
@@ -36,8 +38,8 @@ export function Button({
 
   return (
     <motion.button
-      whileHover={!isDisabled ? { scale: 1.02 } : {}}
-      whileTap={!isDisabled ? { scale: 0.98 } : {}}
+      whileHover={!isDisabled ? { scale: 1.02 } : undefined}
+      whileTap={!isDisabled ? { scale: 0.98 } : undefined}
       className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       disabled={isDisabled}
       {...props}
