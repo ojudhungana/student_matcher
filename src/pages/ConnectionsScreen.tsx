@@ -10,24 +10,10 @@ import { formatRelativeTime } from '@/utils';
 export function ConnectionsScreen() {
   const { connections, loading, refresh } = useConnections();
 
-  if (loading && connections.length === 0) {
-    return (
-      <div className="flex flex-col min-h-screen">
-        <div className="bg-white shadow-sm border-b border-secondary-200 p-4">
-          <h1 className="text-xl font-semibold text-center">Your Connections</h1>
-        </div>
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <LoadingSpinner size="lg" />
-            <p className="mt-4 text-secondary-600">Loading your connections...</p>
-          </div>
-        </div>
-        <Navigation />
-      </div>
-    );
-  }
+  // Avoid interstitial loading screen on navigation: render layout and, if needed,
+  // show content based on existing data; only show empty state when not loading.
 
-  if (connections.length === 0) {
+  if (!loading && connections.length === 0) {
     return (
       <div className="flex flex-col min-h-screen">
         <div className="bg-white shadow-sm border-b border-secondary-200 p-4">

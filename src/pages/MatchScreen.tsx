@@ -27,7 +27,7 @@ export function MatchScreen() {
 
 
 
-  if (!currentMatch && suggestions.length === 0) {
+  if (!loading && !currentMatch && suggestions.length === 0) {
     return (
       <div className="flex flex-col min-h-screen">
         <div className="bg-white shadow-sm border-b border-secondary-200 p-4">
