@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # student_matcher
 
 # install Node.js LTS
@@ -13,6 +14,9 @@
 # Open http://localhost:4000/health -> you should see {"ok":true}
 =======
 # Campus Connect - Frontend
+=======
+# ChargerCircle - Frontend
+>>>>>>> ff58fc09 (Update README.md)
 
 A modern Tinder-style college student matching app built with React + TypeScript. Find study buddies, make friends, and connect with fellow students based on shared classes, interests, and compatibility.
 
