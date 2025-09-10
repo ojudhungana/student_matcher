@@ -73,7 +73,7 @@ src/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd campus-connect-frontend
+   cd ...
    ```
 
 2. **Install dependencies**
