@@ -1,0 +1,18 @@
+# Node
+node_modules/
+dist/
+npm-debug.log*
+yarn*.log
+pnpm-debug.log*
+
+# Env / secrets
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Misc
+*.zip
