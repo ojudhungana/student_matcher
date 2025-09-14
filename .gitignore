@@ -145,4 +145,5 @@ out/
 /coverage
 /test-results/
 /playwright-report/
-/playwright/.cache/
+/playwright/.cache/node_modules/
+.vscode/
