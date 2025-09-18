@@ -1,4 +1,4 @@
-import React from 'react';
+// Circular user avatar image with initials fallback.
 
 interface AvatarProps {
   src?: string;

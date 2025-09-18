@@ -1,4 +1,5 @@
-import React from 'react';
+// Fixed bottom nav bar for primary app routes.
+
 import { NavLink } from 'react-router-dom';
 import { UserPlus, Users, User, Settings } from 'lucide-react';
 

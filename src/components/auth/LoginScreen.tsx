@@ -1,3 +1,4 @@
+// Authentication screen with university SSO and email/password login.
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';

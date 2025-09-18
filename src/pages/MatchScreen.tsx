@@ -1,8 +1,8 @@
+// Swipeable discovery interface to connect or skip suggested matches.
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMatches } from '@/hooks/useMatches';
 import { MatchCard } from '@/components/match/MatchCard';
 import { Button } from '@/components/ui/Button';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Navigation } from '@/components/layout/Navigation';
 import { X, UserPlus } from 'lucide-react';
 
