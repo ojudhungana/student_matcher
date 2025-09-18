@@ -17,4 +17,7 @@
 # npm install
 # npm run build; npm start
 
+# npm install
+# npm run build; npm start
+
 # Open http://localhost:4000/health -> you should see {"ok":true}
