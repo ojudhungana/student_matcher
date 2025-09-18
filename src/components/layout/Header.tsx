@@ -1,4 +1,4 @@
-import React from 'react';
+// Top app bar with title and optional user actions.
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';

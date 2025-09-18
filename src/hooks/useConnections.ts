@@ -1,3 +1,4 @@
+// Fetch and paginate user connections; exposes list and actions.
 import { useState, useEffect } from 'react';
 import { Connection, PaginatedResponse } from '@/types';
 import { apiService } from '@/services/api';

@@ -1,8 +1,8 @@
+// Shows the user's connections with stats, list, and empty state.
 import { useConnections } from '@/hooks/useConnections';
 import { Navigation } from '@/components/layout/Navigation';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Button } from '@/components/ui/Button';
 import { Users, MessageCircle, Calendar, Star, BookOpen } from 'lucide-react';
 import { formatRelativeTime } from '@/utils';

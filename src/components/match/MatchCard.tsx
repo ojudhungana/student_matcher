@@ -1,3 +1,4 @@
+// Swipeable profile card showing a suggested match and shared context.
 import React from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { MatchSuggestion } from '@/types';

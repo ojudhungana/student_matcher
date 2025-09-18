@@ -1,3 +1,4 @@
+// App and account settings overview with navigation and logout.
 import { useAuth } from '@/contexts/AuthContext';
 import { Header } from '@/components/layout/Header';
 import { Navigation } from '@/components/layout/Navigation';

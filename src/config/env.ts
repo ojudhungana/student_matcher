@@ -1,3 +1,4 @@
+// Centralized environment variables and flags for API, Supabase, and app.
 // Environment configuration
 export const env = {
   // Supabase

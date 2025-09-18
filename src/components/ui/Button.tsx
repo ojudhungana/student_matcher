@@ -1,3 +1,4 @@
+// Animated button with variants, sizes, and loading state.
 import React from 'react';
 import { motion } from 'framer-motion';
 
