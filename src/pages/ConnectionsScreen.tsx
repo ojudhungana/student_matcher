@@ -1,8 +1,15 @@
+<<<<<<< HEAD
+=======
+// Shows the user's connections with stats, list, and empty state.
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { useConnections } from '@/hooks/useConnections';
 import { Navigation } from '@/components/layout/Navigation';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
+<<<<<<< HEAD
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+=======
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { Button } from '@/components/ui/Button';
 import { Users, MessageCircle, Calendar, Star, BookOpen } from 'lucide-react';
 import { formatRelativeTime } from '@/utils';

@@ -1,8 +1,15 @@
+<<<<<<< HEAD
+=======
+// Swipeable discovery interface to connect or skip suggested matches.
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMatches } from '@/hooks/useMatches';
 import { MatchCard } from '@/components/match/MatchCard';
 import { Button } from '@/components/ui/Button';
+<<<<<<< HEAD
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+=======
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { Navigation } from '@/components/layout/Navigation';
 import { X, UserPlus } from 'lucide-react';
 

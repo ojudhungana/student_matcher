@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// Common helpers for dates, strings, arrays, validation, images, storage, errors, UI.
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 // Date formatting utilities
 export const formatRelativeTime = (date: string | Date): string => {
   const now = new Date();

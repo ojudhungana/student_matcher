@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// Demo/diagnostic page with links to main app routes (mock data).
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 export function TestPage() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">

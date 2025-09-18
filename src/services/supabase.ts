@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// Supabase client and storage helpers (legacy; prefer config/supabase for client).
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { createClient } from '@supabase/supabase-js';
 
 // These would normally come from environment variables

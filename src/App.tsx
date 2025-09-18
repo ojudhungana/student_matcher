@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// App root: providers and client-side routing.
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/contexts/AuthContext';

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// Route guard requiring auth and optionally a complete profile.
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';

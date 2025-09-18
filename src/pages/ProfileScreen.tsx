@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// Displays the current user's profile with bio, details, interests, and stats.
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { mockCurrentUser } from '@/services/mockData';

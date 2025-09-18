@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// Mock users, matches, connections, and helpers for development.
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { UserProfile, MatchSuggestion, Connection } from '@/types';
 
 // Mock user profiles for development

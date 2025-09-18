@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// Authentication screen with university SSO and email/password login.
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// Manage suggested matches, pagination, and connect/skip actions.
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { useState, useEffect } from 'react';
 import { MatchSuggestion, PaginatedResponse } from '@/types';
 import { apiService } from '@/services/api';

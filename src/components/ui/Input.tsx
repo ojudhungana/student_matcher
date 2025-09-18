@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// Text input with label, error state, and helper text.
+>>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import React from 'react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
