@@ -7,10 +7,13 @@ import { useMatches } from '@/hooks/useMatches';
 import { MatchCard } from '@/components/match/MatchCard';
 import { Button } from '@/components/ui/Button';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 =======
 >>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { Navigation } from '@/components/layout/Navigation';
+=======
+>>>>>>> 63c1b93e (Added nav bar animations, page transitions, profile edit page, fixed an actual mountaintop pile of bugs :()
 import { X, UserPlus } from 'lucide-react';
 
 export function MatchScreen() {
@@ -81,7 +84,7 @@ export function MatchScreen() {
              </div>
           </div>
         </div>
-        <Navigation />
+        
       </div>
     );
   }
@@ -228,7 +231,7 @@ export function MatchScreen() {
          </motion.div>
       </div>
       
-      <Navigation />
+      
     </motion.div>
   );
 }

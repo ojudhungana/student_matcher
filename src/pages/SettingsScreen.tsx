@@ -3,8 +3,7 @@
 // App and account settings overview with navigation and logout.
 >>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { useAuth } from '@/contexts/AuthContext';
-import { Header } from '@/components/layout/Header';
-import { Navigation } from '@/components/layout/Navigation';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { 
@@ -19,6 +18,7 @@ import {
 
 export function SettingsScreen() {
   const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -33,7 +33,7 @@ export function SettingsScreen() {
       icon: User,
       label: 'Edit Profile',
       description: 'Update your information and preferences',
-      action: () => console.log('Navigate to profile edit'),
+      action: () => navigate('/profile/setup'),
     },
     {
       icon: Bell,
@@ -57,7 +57,9 @@ export function SettingsScreen() {
 
   return (
     <div className="flex flex-col min-h-screen bg-secondary-50">
-      <Header title="Settings" />
+      <div className="bg-white shadow-sm border-b border-secondary-200 p-4">
+        <h1 className="text-xl font-semibold text-center">Settings</h1>
+      </div>
       
       <div className="flex-1 overflow-y-auto pb-20">
         <div className="max-w-2xl mx-auto p-4 space-y-4">
@@ -141,7 +143,7 @@ export function SettingsScreen() {
         </div>
       </div>
       
-      <Navigation />
+      
     </div>
   );
 }

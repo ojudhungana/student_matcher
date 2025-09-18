@@ -44,7 +44,7 @@ export function Button({
     <motion.button
       whileHover={!isDisabled ? { scale: 1.02 } : undefined}
       whileTap={!isDisabled ? { scale: 0.98 } : undefined}
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className} shadow-sm hover:shadow-md`}
       disabled={isDisabled}
       {...props}
     >

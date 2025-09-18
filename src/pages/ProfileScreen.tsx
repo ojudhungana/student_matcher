@@ -1,13 +1,15 @@
 <<<<<<< HEAD
 =======
 // Displays the current user's profile with bio, details, interests, and stats.
+<<<<<<< HEAD
 >>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { useState } from 'react';
+=======
+import { useNavigate } from 'react-router-dom';
+>>>>>>> 63c1b93e (Added nav bar animations, page transitions, profile edit page, fixed an actual mountaintop pile of bugs :()
 import { useAuth } from '@/contexts/AuthContext';
 import { mockCurrentUser } from '@/services/mockData';
 import { env } from '@/config/env';
-import { Header } from '@/components/layout/Header';
-import { Navigation } from '@/components/layout/Navigation';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Avatar } from '@/components/ui/Avatar';
@@ -25,27 +27,31 @@ import {
 
 export function ProfileScreen() {
   const { profile, loading } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
   
   // Use mock profile in development if no profile is available
   const currentProfile = env.IS_DEV && !profile ? mockCurrentUser : profile;
 
   if (loading) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Header title="Your Profile" />
+      <div className="flex flex-col min-h-screen bg-secondary-50">
+        <div className="bg-white shadow-sm border-b border-secondary-200 p-4">
+          <h1 className="text-xl font-semibold text-center">Your Profile</h1>
+        </div>
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner size="lg" />
         </div>
-        <Navigation />
+        
       </div>
     );
   }
 
   if (!currentProfile) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Header title="Your Profile" />
+      <div className="flex flex-col min-h-screen bg-secondary-50">
+        <div className="bg-white shadow-sm border-b border-secondary-200 p-4">
+          <h1 className="text-xl font-semibold text-center">Your Profile</h1>
+        </div>
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center max-w-sm">
             <div className="h-16 w-16 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -62,14 +68,15 @@ export function ProfileScreen() {
             </Button>
           </div>
         </div>
-        <Navigation />
       </div>
     );
   }
 
   return (
     <div className="flex flex-col min-h-screen bg-secondary-50">
-      <Header title="Your Profile" />
+      <div className="bg-white shadow-sm border-b border-secondary-200 p-4">
+        <h1 className="text-xl font-semibold text-center">Your Profile</h1>
+      </div>
       
       <div className="flex-1 overflow-y-auto pb-20">
         <div className="max-w-2xl mx-auto p-4 space-y-4">
@@ -100,7 +107,7 @@ export function ProfileScreen() {
               </div>
 
               <Button
-                onClick={() => setIsEditing(!isEditing)}
+                onClick={() => navigate('/profile/setup')}
                 variant="secondary"
                 size="sm"
               >
@@ -216,7 +223,7 @@ export function ProfileScreen() {
         </div>
       </div>
       
-      <Navigation />
+      
     </div>
   );
 }
