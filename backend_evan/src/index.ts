@@ -9,8 +9,12 @@ import match from './routes/match.js';
 import messages from './routes/messages.js';
 import reports from './routes/reports.js';
 import upload from './routes/upload.js';
+import apiRouter from './routes/api.js';
+
+
 
 const app = express();
+app.use('/api', apiRouter);
 app.use(helmet());
 app.use(cors({ origin: true }));
 app.use(express.json());
