@@ -8,12 +8,15 @@ import { ConnectionsScreen } from '@/pages/ConnectionsScreen';
 import { ProfileScreen } from '@/pages/ProfileScreen';
 import { SettingsScreen } from '@/pages/SettingsScreen';
 import { TestPage } from '@/pages/TestPage';
+import { ThemeToggle } from './components/ui/ThemeToggle';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="App">
+          <ThemeToggle />
+
           <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<LoginScreen />} />

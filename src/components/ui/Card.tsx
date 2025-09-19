@@ -31,7 +31,9 @@ export function Card({
     lg: 'shadow-lg',
   };
 
-  const baseClasses = `bg-white rounded-lg border border-secondary-200 ${paddingClasses[padding]} ${shadowClasses[shadow]} ${className}`;
+const baseClasses = `bg-white text-black rounded-lg border border-secondary-200 
+  ${paddingClasses[padding]} ${shadowClasses[shadow]} ${className} 
+  dark:bg-gray-800 dark:text-white dark:border-gray-700`;
 
   if (animate) {
     return (
