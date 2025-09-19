@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
-// React entry point; mounts App into #root with StrictMode and global styles.
->>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
+﻿// React entry point; mounts App into #root with StrictMode and global styles.
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';

@@ -1,4 +1,4 @@
-// Consistent page transition wrapper for all screens.
+﻿// Consistent page transition wrapper for all screens.
 import React from 'react';
 import { motion } from 'framer-motion';
 

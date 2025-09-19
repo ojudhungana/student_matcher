@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
-// App and account settings overview with navigation and logout.
->>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
+﻿// App and account settings overview with navigation and logout.
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/Card';
@@ -137,7 +134,7 @@ export function SettingsScreen() {
           <div className="text-center text-xs text-secondary-500 pt-4">
             <p>Campus Connect v1.0.0</p>
             <p className="mt-1">
-              Made with ❤️ for college students
+              Made with â¤ï¸ for college students
             </p>
           </div>
         </div>

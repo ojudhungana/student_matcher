@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-=======
-// Displays the current user's profile with bio, details, interests, and stats.
-<<<<<<< HEAD
->>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
+﻿// Displays the current user's profile with bio, details, interests, and stats.
 import { useState } from 'react';
-=======
 import { useNavigate } from 'react-router-dom';
->>>>>>> 63c1b93e (Added nav bar animations, page transitions, profile edit page, fixed an actual mountaintop pile of bugs :()
 import { useAuth } from '@/contexts/AuthContext';
 import { mockCurrentUser } from '@/services/mockData';
 import { env } from '@/config/env';
@@ -100,9 +94,9 @@ export function ProfileScreen() {
               
               <div className="flex items-center justify-center space-x-4 text-sm text-secondary-600 mb-4">
                 <span>{currentProfile.age} years old</span>
-                <span>•</span>
+                <span>â€¢</span>
                 <span>{currentProfile.year}</span>
-                <span>•</span>
+                <span>â€¢</span>
                 <span>{currentProfile.major}</span>
               </div>
 

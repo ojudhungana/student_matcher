@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-import React from 'react';
-=======
+﻿import React from 'react';
 // Fixed bottom nav bar for primary app routes.
 
->>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { NavLink } from 'react-router-dom';
 import { UserPlus, Users, User, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

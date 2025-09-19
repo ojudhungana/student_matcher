@@ -1,14 +1,8 @@
-<<<<<<< HEAD
-=======
-// Shows the user's connections with stats, list, and empty state.
->>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
+﻿// Shows the user's connections with stats, list, and empty state.
 import { useConnections } from '@/hooks/useConnections';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
-<<<<<<< HEAD
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-=======
->>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
 import { Button } from '@/components/ui/Button';
 import { Users, MessageCircle, Calendar, Star, BookOpen } from 'lucide-react';
 import { formatRelativeTime } from '@/utils';
@@ -98,7 +92,7 @@ export function ConnectionsScreen() {
                           {connection.user.name}
                         </h3>
                         <p className="text-sm text-secondary-600">
-                          {connection.user.major} • {connection.user.year}
+                          {connection.user.major} â€¢ {connection.user.year}
                         </p>
                       </div>
                       

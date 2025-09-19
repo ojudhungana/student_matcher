@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
-// Initialize Supabase client from env; export storage bucket names.
->>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
+﻿// Initialize Supabase client from env; export storage bucket names.
 import { createClient } from '@supabase/supabase-js';
 import { env } from './env';
 

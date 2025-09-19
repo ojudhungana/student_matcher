@@ -1,19 +1,9 @@
-<<<<<<< HEAD
-=======
-// Swipeable discovery interface to connect or skip suggested matches.
->>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
+﻿// Swipeable discovery interface to connect or skip suggested matches.
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMatches } from '@/hooks/useMatches';
 import { MatchCard } from '@/components/match/MatchCard';
 import { Button } from '@/components/ui/Button';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-=======
->>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
-import { Navigation } from '@/components/layout/Navigation';
-=======
->>>>>>> 63c1b93e (Added nav bar animations, page transitions, profile edit page, fixed an actual mountaintop pile of bugs :()
 import { X, UserPlus } from 'lucide-react';
 
 export function MatchScreen() {
@@ -64,7 +54,7 @@ export function MatchScreen() {
               </p>
               <div className="bg-secondary-50 rounded-lg p-3 mb-4">
                 <p className="text-xs text-secondary-600">
-                  💡 <strong>Tip:</strong> Update your interests in your profile to discover more compatible matches
+                  ðŸ’¡ <strong>Tip:</strong> Update your interests in your profile to discover more compatible matches
                 </p>
               </div>
             </div>
@@ -225,7 +215,7 @@ export function MatchScreen() {
            
            <div className="text-center mt-3">
              <p className="text-xs text-secondary-500">
-               Swipe left to skip • Tap 🤝 to connect
+               Swipe left to skip â€¢ Tap ðŸ¤ to connect
              </p>
            </div>
          </motion.div>

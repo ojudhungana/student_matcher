@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
-// Animated button with variants, sizes, and loading state.
->>>>>>> aaa84261f8429e5f3b3bea0ebd897acd2a3f4f08
+﻿// Animated button with variants, sizes, and loading state.
 import React from 'react';
 import { motion } from 'framer-motion';
 

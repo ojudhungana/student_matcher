@@ -1,4 +1,4 @@
-// Profile setup/edit page with controlled form bound to profile data.
+﻿// Profile setup/edit page with controlled form bound to profile data.
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
