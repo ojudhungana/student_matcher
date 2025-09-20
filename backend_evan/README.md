@@ -13,11 +13,10 @@
 # npm i multer
 # npm i -D @types/multer
 
-
 # npm install
 # npm run build; npm start
 
 # npm install
 # npm run build; npm start
 
-# Open http://localhost:4000/health -> you should see {"ok":true}
+# Open http://localhost:3001/health -> you should see {"ok":true}

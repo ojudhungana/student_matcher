@@ -207,19 +207,14 @@ router.put('/profile', requireAuth, async (req, res) => {
   }
 });
 
-/** POST /api/profile/upload-picture
- *  Accepts a browser file upload, stores it in Supabase Storage (public),
- *  and returns a public URL the frontend can put into the profile.
- */
+ //  Accepts file upload from user, stores it in Supabase Storage (public),
 router.post('/profile/upload-picture', requireAuth, upload.single('file'), async (req, res) => {
   const me = req.user!;
   const file = req.file;
   if (!file) return res.status(400).json({ error: 'file required' });
 
   try {
-    // Create bucket if it doesn’t exist yet (no-op if it does)
-    try { await supabaseService.storage.createBucket(AVATAR_BUCKET, { public: true }); } catch {}
-
+    
     const ext = file.originalname.split('.').pop() || 'jpg';
     const path = `${me.id}/${Date.now()}.${ext}`;
 
@@ -236,11 +231,8 @@ router.post('/profile/upload-picture', requireAuth, upload.single('file'), async
   }
 });
 
-/* -------------------------------- MATCHING ------------------------------- */
-/** GET /api/match/suggestions?page&limit
- *  Returns a paginated list of best matches for the signed-in user.
- *  (Internally reuses our matching logic and scoring.)
- */
+
+// Returns a list of best matches for user.
 router.get('/match/suggestions', requireAuth, async (req, res) => {
   const me = req.user!;
   const page = Math.max(1, parseInt(String(req.query.page || '1'), 10) || 1);
@@ -252,7 +244,7 @@ router.get('/match/suggestions', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Complete your profile first.' });
     }
 
-    // Exclude me, people I already swiped, and blocks both directions
+    // Excludes certain people from being in matching pool
     const exclude = new Set<string>([me.id]);
     const { data: already } = await supabaseService.from('swipes').select('target_id').eq('swiper_id', me.id);
     already?.forEach(r => exclude.add(r.target_id));
@@ -261,12 +253,12 @@ router.get('/match/suggestions', requireAuth, async (req, res) => {
     const { data: blockedMe } = await supabaseService.from('blocks').select('blocker_id').eq('blocked_id', me.id);
     blockedMe?.forEach(b => exclude.add(b.blocker_id));
 
-    // Pool of candidates (only complete profiles)
+    // Possible pool of people to match with
     const { data: pool, error } = await supabaseService.from('profiles_view').select('*').limit(1000);
     if (error) return res.status(500).json({ error: error.message });
     const candidates = (pool || []).filter(c => !exclude.has(c.id)).filter(isCompleteProfile);
 
-    // My tags and candidate tags
+    // User Tags
     const myTags = await getTags(me.id);
     const { data: tagsRows } = await supabaseService.from('user_tags_with_names').select('user_id,name').in('user_id', candidates.map(c => c.id));
     const tagMap = new Map<string, string[]>();
@@ -287,7 +279,7 @@ router.get('/match/suggestions', requireAuth, async (req, res) => {
       };
     }).sort((a,b) => b.score - a.score);
 
-    // Simple pagination
+    // Pagination
     const start = (page - 1) * limit;
     const pageItems = scored.slice(start, start + limit);
 
