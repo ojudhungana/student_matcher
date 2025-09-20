@@ -4,9 +4,6 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 
-import messages from './routes/messages.js';
-import reports from './routes/reports.js';
-import upload from './routes/upload.js';
 import apiRouter from './routes/api.js';
 
 
@@ -20,9 +17,6 @@ app.use(morgan('dev'));
 
 app.get('/health', (_req, res) => res.json({ ok: true }));
 
-app.use('/messages', messages);
-app.use('/moderation', reports);
-app.use('/profiles', upload);
 
 const port = Number(process.env.PORT || 3001);
 app.listen(port, () => {
