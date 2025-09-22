@@ -1,8 +1,7 @@
-﻿// Shows the user's connections with stats, list, and empty state.
+// Shows the user's connections with stats, list, and empty state.
 import { useConnections } from '@/hooks/useConnections';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Button } from '@/components/ui/Button';
 import { Users, MessageCircle, Calendar, Star, BookOpen } from 'lucide-react';
 import { formatRelativeTime } from '@/utils';
@@ -92,7 +91,7 @@ export function ConnectionsScreen() {
                           {connection.user.name}
                         </h3>
                         <p className="text-sm text-secondary-600">
-                          {connection.user.major} â€¢ {connection.user.year}
+                          {connection.user.major} {'\u2022'} {connection.user.year}
                         </p>
                       </div>
                       

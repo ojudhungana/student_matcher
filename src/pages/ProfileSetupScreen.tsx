@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/services/api';
-import { COMMON_INTERESTS, COMMON_MAJORS, YEARS, ProfileFormData } from '@/types';
+import { COMMON_MAJORS, YEARS, ProfileFormData } from '@/types';
 
 export function ProfileSetupScreen() {
   const navigate = useNavigate();
@@ -138,20 +138,40 @@ export function ProfileSetupScreen() {
 
           <Card>
             <h3 className="font-semibold text-secondary-900 mb-4">Interests</h3>
-            <div className="flex flex-wrap gap-2">
-              {COMMON_INTERESTS.map((interest) => {
-                const selected = form.interests.includes(interest as string);
-                return (
-                  <button
-                    type="button"
-                    key={interest as string}
-                    className={`px-3 py-1.5 rounded-full text-sm border ${selected ? 'bg-primary-100 text-primary-800 border-primary-200' : 'bg-white text-secondary-700 border-secondary-200'}`}
-                    onClick={() => toggleArrayValue('interests', interest as string)}
-                  >
-                    {interest as string}
-                  </button>
-                );
-              })}
+            <div className="space-y-2">
+              <Input
+                placeholder="Add an interest and press Enter"
+                value={''}
+                onChange={() => {}}
+                onKeyDown={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const value = target.value.trim();
+                    if (value) {
+                      handleChange('interests', Array.from(new Set([...(form.interests || []), value])));
+                      target.value = '';
+                    }
+                  }
+                }}
+              />
+              {form.interests?.length ? (
+                <div className="flex flex-wrap gap-2">
+                  {form.interests.map((i) => (
+                    <span key={i} className="inline-flex items-center px-3 py-1 rounded-full bg-primary-100 text-primary-800 text-sm">
+                      {i}
+                      <button
+                        type="button"
+                        className="ml-2 text-primary-700 hover:text-primary-900"
+                        aria-label={`Remove ${i}`}
+                        onClick={() => handleChange('interests', form.interests.filter((x) => x !== i))}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              ) : null}
             </div>
           </Card>
 

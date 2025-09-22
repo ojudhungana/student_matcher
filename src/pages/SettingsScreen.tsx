@@ -1,4 +1,4 @@
-﻿// App and account settings overview with navigation and logout.
+// App and account settings overview with navigation and logout.
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/Card';
@@ -113,7 +113,7 @@ export function SettingsScreen() {
               </div>
               <div className="flex justify-between">
                 <span>Build</span>
-                <span>2024.01.001</span>
+                <span>2025</span>
               </div>
             </div>
           </Card>
@@ -133,9 +133,7 @@ export function SettingsScreen() {
           {/* Footer */}
           <div className="text-center text-xs text-secondary-500 pt-4">
             <p>Campus Connect v1.0.0</p>
-            <p className="mt-1">
-              Made with â¤ï¸ for college students
-            </p>
+            <p className="mt-1">Made with {'\u2764\uFE0F'} for college students</p>
           </div>
         </div>
       </div>

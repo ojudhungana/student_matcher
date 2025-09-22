@@ -1,4 +1,5 @@
-﻿// Displays the current user's profile with bio, details, interests, and stats.
+// Displays the current user's profile with bio, details, interests, and stats.
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -76,14 +77,14 @@ export function ProfileScreen() {
         <div className="max-w-2xl mx-auto p-4 space-y-4">
           {/* Profile Header */}
           <Card>
-            <div className="text-center">
-              <div className="relative inline-block mb-4">
+            <div className="flex flex-col items-center text-center">
+              <div className="relative inline-flex items-center justify-center mb-4 mx-auto">
                 <Avatar
                   src={currentProfile.profilePicture}
                   name={currentProfile.name}
                   size="xl"
                 />
-                <button className="absolute bottom-0 right-0 h-8 w-8 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-primary-700 transition-colors">
+                <button className="absolute bottom-0 left-1/2 -translate-x-1/2 transform h-8 w-8 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-primary-700 transition-colors">
                   <Camera className="h-4 w-4" />
                 </button>
               </div>
@@ -94,9 +95,9 @@ export function ProfileScreen() {
               
               <div className="flex items-center justify-center space-x-4 text-sm text-secondary-600 mb-4">
                 <span>{currentProfile.age} years old</span>
-                <span>â€¢</span>
+                <span>{'\u2022'}</span>
                 <span>{currentProfile.year}</span>
-                <span>â€¢</span>
+                <span>{'\u2022'}</span>
                 <span>{currentProfile.major}</span>
               </div>
 

@@ -54,7 +54,7 @@ export function MatchScreen() {
               </p>
               <div className="bg-secondary-50 rounded-lg p-3 mb-4">
                 <p className="text-xs text-secondary-600">
-                  ðŸ’¡ <strong>Tip:</strong> Update your interests in your profile to discover more compatible matches
+                  💡 <strong>Tip:</strong> Update your interests in your profile to discover more compatible matches
                 </p>
               </div>
             </div>
@@ -182,12 +182,12 @@ export function MatchScreen() {
                  whileHover={{ scale: 1.1 }} 
                  whileTap={{ scale: 0.9 }}
                >
-                 <Button
+                <Button
                    onClick={handleSkip}
                    variant="secondary"
                    size="lg"
                    className="h-16 w-16 rounded-full p-0 shadow-lg bg-white border-2 border-red-200 hover:border-red-300"
-                   disabled={!currentMatch}
+                  disabled={!currentMatch}
                  >
                    <X className="h-6 w-6 text-red-500" />
                  </Button>
@@ -200,12 +200,12 @@ export function MatchScreen() {
                  whileHover={{ scale: 1.1 }} 
                  whileTap={{ scale: 0.9 }}
                >
-                 <Button
+                <Button
                    onClick={handleConnect}
                    variant="primary"
                    size="lg"
                    className="h-16 w-16 rounded-full p-0 shadow-lg bg-gradient-to-br from-primary-500 to-primary-600"
-                   disabled={!currentMatch}
+                  disabled={!currentMatch || loading}
                  >
                    <UserPlus className="h-6 w-6" />
                  </Button>
@@ -214,9 +214,9 @@ export function MatchScreen() {
            </div>
            
            <div className="text-center mt-3">
-             <p className="text-xs text-secondary-500">
-               Swipe left to skip â€¢ Tap ðŸ¤ to connect
-             </p>
+            <p className="text-xs text-secondary-500">
+              Swipe left to skip • Tap 🤝 to connect
+            </p>
            </div>
          </motion.div>
       </div>
