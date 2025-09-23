@@ -1,6 +1,4 @@
-// Circular user avatar image with initials fallback and image-error handling.
-
-import { useState } from 'react';
+// Circular user avatar image with initials fallback.
 
 interface AvatarProps {
   src?: string;
@@ -11,7 +9,6 @@ interface AvatarProps {
 }
 
 export function Avatar({ src, alt, name, size = 'md', className = '' }: AvatarProps) {
-  const [imageError, setImageError] = useState(false);
   const sizeClasses = {
     sm: 'h-8 w-8 text-sm',
     md: 'h-12 w-12 text-base',
@@ -28,13 +25,12 @@ export function Avatar({ src, alt, name, size = 'md', className = '' }: AvatarPr
       .slice(0, 2);
   };
 
-  if (src && !imageError) {
+  if (src) {
     return (
       <img
         src={src}
         alt={alt || ''}
         className={`${sizeClasses[size]} rounded-full object-cover ${className}`}
-        onError={() => setImageError(true)}
       />
     );
   }

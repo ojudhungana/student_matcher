@@ -1,5 +1,5 @@
-﻿// App root: providers and client-side routing.
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+// App root: providers and client-side routing.
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { LoginScreen } from '@/components/auth/LoginScreen';
@@ -7,44 +7,33 @@ import { MatchScreen } from '@/pages/MatchScreen';
 import { ConnectionsScreen } from '@/pages/ConnectionsScreen';
 import { ProfileScreen } from '@/pages/ProfileScreen';
 import { SettingsScreen } from '@/pages/SettingsScreen';
-import { ProfileSetupScreen } from '@/pages/ProfileSetupScreen';
 import { TestPage } from '@/pages/TestPage';
-import { AnimatePresence } from 'framer-motion';
-import { PageTransition } from '@/components/layout/PageTransition';
 import { Navigation } from '@/components/layout/Navigation';
-
-function AnimatedRoutes() {
-  const location = useLocation();
-  return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
-        {/* Public Routes */}
-        <Route path="/login" element={<PageTransition><LoginScreen /></PageTransition>} />
-        <Route path="/test" element={<PageTransition><TestPage /></PageTransition>} />
-        
-        {/* Protected Routes - Temporarily remove protection for development */}
-        <Route path="/match" element={<PageTransition><MatchScreen /></PageTransition>} />
-        <Route path="/connections" element={<PageTransition><ConnectionsScreen /></PageTransition>} />
-        <Route path="/profile" element={<PageTransition><ProfileScreen /></PageTransition>} />
-        <Route path="/profile/setup" element={<PageTransition><ProfileSetupScreen /></PageTransition>} />
-        <Route path="/settings" element={<PageTransition><SettingsScreen /></PageTransition>} />
-        
-        {/* Default redirect */}
-        <Route path="/" element={<Navigate to="/match" replace />} />
-        
-        {/* Catch all */}
-        <Route path="*" element={<Navigate to="/match" replace />} />
-      </Routes>
-    </AnimatePresence>
-  );
-}
+import { FloatingThemeToggle } from '@/components/ui/FloatingThemeToggle';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="App">
-          <AnimatedRoutes />
+
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/login" element={<LoginScreen />} />
+            <Route path="/test" element={<TestPage />} />
+            
+            {/* Protected Routes - Temporarily remove protection for development */}
+            <Route path="/match" element={<MatchScreen />} />
+            <Route path="/connections" element={<ConnectionsScreen />} />
+            <Route path="/profile" element={<ProfileScreen />} />
+            <Route path="/settings" element={<SettingsScreen />} />
+            
+            {/* Default redirect */}
+            <Route path="/" element={<Navigate to="/match" replace />} />
+            
+            {/* Catch all */}
+            <Route path="*" element={<Navigate to="/match" replace />} />
+          </Routes>
           
           {/* Toast notifications */}
           <Toaster
@@ -70,8 +59,10 @@ function App() {
                 },
               },
             }}
+            
           />
           <Navigation />
++       <FloatingThemeToggle />
         </div>
       </Router>
     </AuthProvider>

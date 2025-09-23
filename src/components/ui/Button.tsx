@@ -1,4 +1,4 @@
-﻿// Animated button with variants, sizes, and loading state.
+// Animated button with variants, sizes, and loading state.
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -23,10 +23,10 @@ export function Button({
   const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
   
   const variantClasses = {
-    primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 disabled:bg-primary-300',
-    secondary: 'bg-secondary-100 text-secondary-900 hover:bg-secondary-200 focus:ring-secondary-500 disabled:bg-secondary-50',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 disabled:bg-red-300',
-    ghost: 'text-secondary-700 hover:bg-secondary-100 focus:ring-secondary-500 disabled:text-secondary-400',
+    primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 disabled:bg-primary-300 dark:hover:bg-primary-500',
+    secondary: 'bg-secondary-100 text-secondary-900 hover:bg-secondary-200 focus:ring-secondary-500 disabled:bg-secondary-50 dark:bg-secondary-800 dark:text-secondary-50 dark:hover:bg-secondary-700 dark:focus:ring-secondary-600',
+    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 disabled:bg-red-300 dark:hover:bg-red-600',
+    ghost: 'text-secondary-700 hover:bg-secondary-100 focus:ring-secondary-500 disabled:text-secondary-400 dark:text-secondary-200 dark:hover:bg-secondary-800 dark:focus:ring-secondary-600',
   };
   
   const sizeClasses = {
