@@ -11,6 +11,11 @@
     @apply bg-white text-secondary-900;
   }
 }
+@layer base {
+  .dark body {
+    @apply bg-secondary-900 text-secondary-50;
+  }
+}
 
 @layer components {
   /* Custom scrollbar styles */

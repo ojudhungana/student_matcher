@@ -45,13 +45,13 @@ export function ProfileScreen() {
         <Header title="Your Profile" />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center max-w-sm">
-            <div className="h-16 w-16 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="h-8 w-8 text-secondary-400" />
+            <div className="h-16 w-16 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4 dark:bg-secondary-800">
+              <User className="h-8 w-8 text-secondary-400 dark:text-secondary-300" />
             </div>
-            <h3 className="text-lg font-semibold text-secondary-900 mb-2">
+            <h3 className="text-lg font-semibold text-secondary-900 mb-2 dark:text-secondary-50">
               Profile not found
             </h3>
-            <p className="text-secondary-600 text-sm mb-4">
+            <p className="text-secondary-600 text-sm mb-4 dark:text-secondary-300">
               There was an error loading your profile.
             </p>
             <Button onClick={() => window.location.reload()}>
@@ -65,7 +65,7 @@ export function ProfileScreen() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-secondary-50">
+    <div className="flex flex-col min-h-screen bg-secondary-50 dark:bg-secondary-900">
       <Header title="Your Profile" />
       
       <div className="flex-1 overflow-y-auto pb-20">
@@ -84,11 +84,11 @@ export function ProfileScreen() {
                 </button>
               </div>
               
-              <h1 className="text-2xl font-bold text-secondary-900 mb-1">
+              <h1 className="text-2xl font-bold text-secondary-900 mb-1 dark:text-secondary-50">
                 {currentProfile.name}
               </h1>
               
-              <div className="flex items-center justify-center space-x-4 text-sm text-secondary-600 mb-4">
+              <div className="flex items-center justify-center space-x-4 text-sm text-secondary-600 mb-4 dark:text-secondary-300">
                 <span>{currentProfile.age} years old</span>
                 <span>•</span>
                 <span>{currentProfile.year}</span>
@@ -110,38 +110,38 @@ export function ProfileScreen() {
           {/* Bio */}
           {currentProfile.bio && (
             <Card>
-              <h3 className="font-semibold text-secondary-900 mb-2">About Me</h3>
-              <p className="text-secondary-700 leading-relaxed">{currentProfile.bio}</p>
+              <h3 className="font-semibold text-secondary-900 mb-2 dark:text-secondary-50">About Me</h3>
+              <p className="text-secondary-700 leading-relaxed dark:text-secondary-200">{currentProfile.bio}</p>
             </Card>
           )}
 
           {/* Basic Info */}
           <Card>
-            <h3 className="font-semibold text-secondary-900 mb-4">Basic Information</h3>
+            <h3 className="font-semibold text-secondary-900 mb-4 dark:text-secondary-50">Basic Information</h3>
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
-                <GraduationCap className="h-5 w-5 text-secondary-500" />
+                <GraduationCap className="h-5 w-5 text-secondary-500 dark:text-secondary-400" />
                 <div>
-                  <div className="font-medium text-secondary-900">{currentProfile.major}</div>
-                  <div className="text-sm text-secondary-600">{currentProfile.year}</div>
+                  <div className="font-medium text-secondary-900 dark:text-secondary-50">{currentProfile.major}</div>
+                  <div className="text-sm text-secondary-600 dark:text-secondary-300">{currentProfile.year}</div>
                 </div>
               </div>
               
               <div className="flex items-center space-x-3">
-                <MapPin className="h-5 w-5 text-secondary-500" />
+                <MapPin className="h-5 w-5 text-secondary-500 dark:text-secondary-400" />
                 <div>
-                  <div className="font-medium text-secondary-900">{currentProfile.university}</div>
-                  <div className="text-sm text-secondary-600">University</div>
+                  <div className="font-medium text-secondary-900 dark:text-secondary-50">{currentProfile.university}</div>
+                  <div className="text-sm text-secondary-600 dark:text-secondary-300">University</div>
                 </div>
               </div>
               
               <div className="flex items-center space-x-3">
-                <Calendar className="h-5 w-5 text-secondary-500" />
+                <Calendar className="h-5 w-5 text-secondary-500 dark:text-secondary-400" />
                 <div>
-                  <div className="font-medium text-secondary-900">
+                  <div className="font-medium text-secondary-900 dark:text-secondary-50">
                     {currentProfile.ageRangeMin} - {currentProfile.ageRangeMax} years
                   </div>
-                  <div className="text-sm text-secondary-600">Looking for ages</div>
+                  <div className="text-sm text-secondary-600 dark:text-secondary-300">Looking for ages</div>
                 </div>
               </div>
             </div>
@@ -151,14 +151,14 @@ export function ProfileScreen() {
           {currentProfile.interests.length > 0 && (
             <Card>
               <div className="flex items-center space-x-2 mb-3">
-                <Star className="h-5 w-5 text-secondary-500" />
-                <h3 className="font-semibold text-secondary-900">Interests</h3>
+                <Star className="h-5 w-5 text-secondary-500 dark:text-secondary-400" />
+                <h3 className="font-semibold text-secondary-900 dark:text-secondary-50">Interests</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {currentProfile.interests.map((interest) => (
                   <span
                     key={interest}
-                    className="px-3 py-1 bg-primary-100 text-primary-800 text-sm rounded-full"
+                    className="px-3 py-1 bg-primary-100 text-primary-800 text-sm rounded-full dark:bg-secondary-800 dark:text-secondary-200"
                   >
                     {interest}
                   </span>
@@ -171,14 +171,14 @@ export function ProfileScreen() {
           {currentProfile.classes.length > 0 && (
             <Card>
               <div className="flex items-center space-x-2 mb-3">
-                <BookOpen className="h-5 w-5 text-secondary-500" />
-                <h3 className="font-semibold text-secondary-900">Current Classes</h3>
+                <BookOpen className="h-5 w-5 text-secondary-500 dark:text-secondary-400" />
+                <h3 className="font-semibold text-secondary-900 dark:text-secondary-50">Current Classes</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {currentProfile.classes.map((className) => (
                   <span
                     key={className}
-                    className="px-3 py-1 bg-secondary-100 text-secondary-800 text-sm rounded-full"
+                    className="px-3 py-1 bg-secondary-100 text-secondary-800 text-sm rounded-full dark:bg-secondary-800 dark:text-secondary-200"
                   >
                     {className}
                   </span>
@@ -189,22 +189,22 @@ export function ProfileScreen() {
 
           {/* Profile Completion */}
           <Card>
-            <h3 className="font-semibold text-secondary-900 mb-3">Profile Completion</h3>
+            <h3 className="font-semibold text-secondary-900 mb-3 dark:text-secondary-50">Profile Completion</h3>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>Profile completeness</span>
-                <span className="font-medium">
+                <span className="dark:text-secondary-300">Profile completeness</span>
+                <span className="font-medium dark:text-secondary-50">
                   {currentProfile.isProfileComplete ? '100%' : '75%'}
                 </span>
               </div>
-              <div className="w-full bg-secondary-200 rounded-full h-2">
+              <div className="w-full bg-secondary-200 rounded-full h-2 dark:bg-secondary-700">
                 <div
                   className="bg-primary-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: currentProfile.isProfileComplete ? '100%' : '75%' }}
                 />
               </div>
               {!currentProfile.isProfileComplete && (
-                <p className="text-sm text-secondary-600 mt-2">
+                <p className="text-sm text-secondary-600 mt-2 dark:text-secondary-300">
                   Complete your profile to get better matches!
                 </p>
               )}
@@ -217,3 +217,4 @@ export function ProfileScreen() {
     </div>
   );
 }
+

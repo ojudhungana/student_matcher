@@ -8,14 +8,14 @@ import { ConnectionsScreen } from '@/pages/ConnectionsScreen';
 import { ProfileScreen } from '@/pages/ProfileScreen';
 import { SettingsScreen } from '@/pages/SettingsScreen';
 import { TestPage } from '@/pages/TestPage';
-import { ThemeToggle } from './components/ui/ThemeToggle';
+import { Navigation } from '@/components/layout/Navigation';
+import { FloatingThemeToggle } from '@/components/ui/FloatingThemeToggle';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="App">
-          <ThemeToggle />
 
           <Routes>
             {/* Public Routes */}
@@ -59,7 +59,10 @@ function App() {
                 },
               },
             }}
+            
           />
+          <Navigation />
++       <FloatingThemeToggle />
         </div>
       </Router>
     </AuthProvider>
