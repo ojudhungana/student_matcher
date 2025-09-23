@@ -1,3 +1,4 @@
+// App root: providers and client-side routing.
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -7,12 +8,15 @@ import { ConnectionsScreen } from '@/pages/ConnectionsScreen';
 import { ProfileScreen } from '@/pages/ProfileScreen';
 import { SettingsScreen } from '@/pages/SettingsScreen';
 import { TestPage } from '@/pages/TestPage';
+import { Navigation } from '@/components/layout/Navigation';
+import { FloatingThemeToggle } from '@/components/ui/FloatingThemeToggle';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="App">
+
           <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<LoginScreen />} />
@@ -55,7 +59,10 @@ function App() {
                 },
               },
             }}
+            
           />
+          <Navigation />
++       <FloatingThemeToggle />
         </div>
       </Router>
     </AuthProvider>

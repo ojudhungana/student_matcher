@@ -1,3 +1,4 @@
+// Initialize Supabase client from env; export storage bucket names.
 import { createClient } from '@supabase/supabase-js';
 import { env } from './env';
 

@@ -1,4 +1,4 @@
-import React from 'react';
+// Circular user avatar image with initials fallback.
 
 interface AvatarProps {
   src?: string;
@@ -29,7 +29,7 @@ export function Avatar({ src, alt, name, size = 'md', className = '' }: AvatarPr
     return (
       <img
         src={src}
-        alt={alt || name || 'Avatar'}
+        alt={alt || ''}
         className={`${sizeClasses[size]} rounded-full object-cover ${className}`}
       />
     );

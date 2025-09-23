@@ -1,14 +1,21 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
+  /* Reserve space for scrollbar to avoid layout shift */
+  scrollbar-gutter: stable both-edges;
   }
   
   body {
-    @apply bg-white text-secondary-900;
+  @apply bg-secondary-50 text-secondary-900 overflow-y-scroll;
+  }
+}
+@layer base {
+  .dark body {
+    @apply bg-secondary-900 text-secondary-50;
   }
 }
 

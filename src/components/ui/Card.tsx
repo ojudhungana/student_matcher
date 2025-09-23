@@ -1,3 +1,4 @@
+// Content container with optional padding, shadow, and animation.
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -30,7 +31,8 @@ export function Card({
     lg: 'shadow-lg',
   };
 
-  const baseClasses = `bg-white rounded-lg border border-secondary-200 ${paddingClasses[padding]} ${shadowClasses[shadow]} ${className}`;
+const baseClasses = `bg-white dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700 text-secondary-900 dark:text-secondary-50 
+${paddingClasses[padding]} ${shadowClasses[shadow]} ${className}`;
 
   if (animate) {
     return (
@@ -38,12 +40,12 @@ export function Card({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className={baseClasses}
+        className={`${baseClasses} card-hover`}
       >
         {children}
       </motion.div>
     );
   }
 
-  return <div className={baseClasses}>{children}</div>;
+  return <div className={`${baseClasses} card-hover`}>{children}</div>;
 }

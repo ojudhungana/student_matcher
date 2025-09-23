@@ -1,4 +1,4 @@
-import React from 'react';
+// Top app bar with title and optional user actions.
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
@@ -21,7 +21,7 @@ export function Header({ title = 'Campus Connect', showProfile = true }: HeaderP
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-secondary-200">
+    <header className="bg-white shadow-sm border-b border-secondary-200 dark:bg-secondary-900 dark:border-secondary-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Title */}
@@ -29,14 +29,14 @@ export function Header({ title = 'Campus Connect', showProfile = true }: HeaderP
             <div className="flex items-center justify-center h-8 w-8 bg-primary-600 rounded-lg">
               <Heart className="h-5 w-5 text-white" />
             </div>
-            <h1 className="text-xl font-semibold text-secondary-900">{title}</h1>
+            <h1 className="text-xl font-semibold text-secondary-900 dark:text-secondary-50">{title}</h1>
           </div>
 
           {/* User Profile and Actions */}
           {showProfile && user && profile && (
             <div className="flex items-center space-x-4">
               <div className="hidden sm:flex items-center space-x-3">
-                <span className="text-sm text-secondary-700">
+                <span className="text-sm text-secondary-700 dark:text-secondary-200">
                   Hi, {profile.name.split(' ')[0]}!
                 </span>
                 <Avatar
@@ -73,3 +73,4 @@ export function Header({ title = 'Campus Connect', showProfile = true }: HeaderP
     </header>
   );
 }
+
