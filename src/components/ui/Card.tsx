@@ -1,4 +1,4 @@
-﻿// Content container with optional padding, shadow, and animation.
+// Content container with optional padding, shadow, and animation.
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -31,7 +31,8 @@ export function Card({
     lg: 'shadow-lg',
   };
 
-  const baseClasses = `bg-white rounded-lg border border-secondary-200 ${paddingClasses[padding]} ${shadowClasses[shadow]} ${className}`;
+const baseClasses = `bg-white dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700 text-secondary-900 dark:text-secondary-50 
+${paddingClasses[padding]} ${shadowClasses[shadow]} ${className}`;
 
   if (animate) {
     return (

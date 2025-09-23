@@ -1,4 +1,4 @@
-﻿// Shared TypeScript types and constants (e.g., UserProfile, YEARS, majors).
+// Shared TypeScript types and constants (e.g., UserProfile, YEARS, majors).
 // User and Profile Types
 export interface UserProfile {
   id: string;
