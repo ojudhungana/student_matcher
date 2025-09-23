@@ -1,6 +1,5 @@
 // App and account settings overview with navigation and logout.
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Navigation } from '@/components/layout/Navigation';
 import { Card } from '@/components/ui/Card';
@@ -17,7 +16,6 @@ import {
 
 export function SettingsScreen() {
   const { logout } = useAuth();
-  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -32,7 +30,7 @@ export function SettingsScreen() {
       icon: User,
       label: 'Edit Profile',
       description: 'Update your information and preferences',
-      action: () => navigate('/profile/setup'),
+      action: () => console.log('Navigate to profile edit'),
     },
     {
       icon: Bell,
@@ -133,12 +131,14 @@ export function SettingsScreen() {
           {/* Footer */}
           <div className="text-center text-xs text-secondary-500 pt-4 dark:text-secondary-400">
             <p>Campus Connect v1.0.0</p>
-            <p className="mt-1">Made with {'\u2764\uFE0F'} for college students</p>
+            <p className="mt-1">
+              Made with ❤️ for college students
+            </p>
           </div>
         </div>
       </div>
       
-      
+      <Navigation />
     </div>
   );
 }

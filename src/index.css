@@ -12,11 +12,11 @@
   body {
   @apply bg-secondary-50 text-secondary-900 overflow-y-scroll;
   }
-}
-@layer base {
-  .dark body {
+
+.dark body {
     @apply bg-secondary-900 text-secondary-50;
   }
+
 }
 
 @layer components {

@@ -1,4 +1,4 @@
-// Swipeable discovery interface to connect or skip suggested matches.
+﻿// Swipeable discovery interface to connect or skip suggested matches.
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMatches } from '@/hooks/useMatches';
 import { MatchCard } from '@/components/match/MatchCard';
@@ -72,7 +72,7 @@ export function MatchScreen() {
             </div>
           </div>
         </div>
-        
+        <Navigation />
       </div>
     );
   }
@@ -223,4 +223,3 @@ export function MatchScreen() {
     </motion.div>
   );
 }
-

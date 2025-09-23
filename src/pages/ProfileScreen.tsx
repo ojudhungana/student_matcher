@@ -1,11 +1,10 @@
 // Displays the current user's profile with bio, details, interests, and stats.
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Header } from '@/components/layout/Header';
-import { Navigation } from '@/components/layout/Navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { mockCurrentUser } from '@/services/mockData';
 import { env } from '@/config/env';
+import { Header } from '@/components/layout/Header';
+import { Navigation } from '@/components/layout/Navigation';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Avatar } from '@/components/ui/Avatar';
@@ -23,31 +22,27 @@ import {
 
 export function ProfileScreen() {
   const { profile, loading } = useAuth();
-  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
   
   // Use mock profile in development if no profile is available
   const currentProfile = env.IS_DEV && !profile ? mockCurrentUser : profile;
 
   if (loading) {
     return (
-      <div className="flex flex-col min-h-screen bg-secondary-50">
-        <div className="bg-white shadow-sm border-b border-secondary-200 p-4">
-          <h1 className="text-xl font-semibold text-center">Your Profile</h1>
-        </div>
+      <div className="flex flex-col min-h-screen">
+        <Header title="Your Profile" />
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner size="lg" />
         </div>
-        
+        <Navigation />
       </div>
     );
   }
 
   if (!currentProfile) {
     return (
-      <div className="flex flex-col min-h-screen bg-secondary-50">
-        <div className="bg-white shadow-sm border-b border-secondary-200 p-4">
-          <h1 className="text-xl font-semibold text-center">Your Profile</h1>
-        </div>
+      <div className="flex flex-col min-h-screen">
+        <Header title="Your Profile" />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center max-w-sm">
             <div className="h-16 w-16 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4 dark:bg-secondary-800">
@@ -64,6 +59,7 @@ export function ProfileScreen() {
             </Button>
           </div>
         </div>
+        <Navigation />
       </div>
     );
   }
@@ -76,14 +72,14 @@ export function ProfileScreen() {
         <div className="max-w-2xl mx-auto p-4 space-y-4">
           {/* Profile Header */}
           <Card>
-            <div className="flex flex-col items-center text-center">
-              <div className="relative inline-flex items-center justify-center mb-4 mx-auto">
+            <div className="text-center">
+              <div className="relative inline-block mb-4">
                 <Avatar
                   src={currentProfile.profilePicture}
                   name={currentProfile.name}
                   size="xl"
                 />
-                <button className="absolute bottom-0 left-1/2 -translate-x-1/2 transform h-8 w-8 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-primary-700 transition-colors">
+                <button className="absolute bottom-0 right-0 h-8 w-8 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-primary-700 transition-colors">
                   <Camera className="h-4 w-4" />
                 </button>
               </div>
@@ -94,14 +90,14 @@ export function ProfileScreen() {
               
               <div className="flex items-center justify-center space-x-4 text-sm text-secondary-600 mb-4 dark:text-secondary-300">
                 <span>{currentProfile.age} years old</span>
-                <span>{'\u2022'}</span>
+                <span>•</span>
                 <span>{currentProfile.year}</span>
-                <span>{'\u2022'}</span>
+                <span>•</span>
                 <span>{currentProfile.major}</span>
               </div>
 
               <Button
-                onClick={() => navigate('/profile/setup')}
+                onClick={() => setIsEditing(!isEditing)}
                 variant="secondary"
                 size="sm"
               >
@@ -217,8 +213,7 @@ export function ProfileScreen() {
         </div>
       </div>
       
-      
+      <Navigation />
     </div>
   );
 }
-

@@ -1,8 +1,5 @@
-// Fixed bottom nav bar for primary app routes.
-
-import { NavLink } from 'react-router-dom';
+﻿import { NavLink } from 'react-router-dom';
 import { UserPlus, Users, User, Settings } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
   { path: '/match', icon: UserPlus, label: 'Discover' },
@@ -40,3 +37,4 @@ export function Navigation() {
     </nav>
   );
 }
+

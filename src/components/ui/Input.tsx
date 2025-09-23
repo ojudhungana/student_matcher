@@ -1,4 +1,4 @@
-// Text input with label, error state, and helper text.
+﻿// Text input with label, error state, and helper text.
 import React from 'react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {

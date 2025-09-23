@@ -1,5 +1,5 @@
 // Manage suggested matches, pagination, and connect/skip actions.
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MatchSuggestion, PaginatedResponse } from '@/types';
 import { apiService } from '@/services/api';
 import { getMockMatchSuggestions } from '@/services/mockData';
