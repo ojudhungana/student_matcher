@@ -6,8 +6,6 @@ import cors from 'cors';
 
 import apiRouter from './routes/api.js';
 
-
-
 const app = express();
 app.use('/api', apiRouter);
 app.use(helmet());
