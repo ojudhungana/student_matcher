@@ -1,9 +1,9 @@
+﻿// Swipeable discovery interface to connect or skip suggested matches.
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMatches } from '@/hooks/useMatches';
 import { MatchCard } from '@/components/match/MatchCard';
 import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { Navigation } from '@/components/layout/Navigation';
 import { X, UserPlus } from 'lucide-react';
 
 export function MatchScreen() {
@@ -74,7 +74,7 @@ export function MatchScreen() {
              </div>
           </div>
         </div>
-        <Navigation />
+        
       </div>
     );
   }
@@ -182,12 +182,12 @@ export function MatchScreen() {
                  whileHover={{ scale: 1.1 }} 
                  whileTap={{ scale: 0.9 }}
                >
-                 <Button
+                <Button
                    onClick={handleSkip}
                    variant="secondary"
                    size="lg"
                    className="h-16 w-16 rounded-full p-0 shadow-lg bg-white border-2 border-red-200 hover:border-red-300"
-                   disabled={!currentMatch}
+                  disabled={!currentMatch}
                  >
                    <X className="h-6 w-6 text-red-500" />
                  </Button>
@@ -200,12 +200,12 @@ export function MatchScreen() {
                  whileHover={{ scale: 1.1 }} 
                  whileTap={{ scale: 0.9 }}
                >
-                 <Button
+                <Button
                    onClick={handleConnect}
                    variant="primary"
                    size="lg"
                    className="h-16 w-16 rounded-full p-0 shadow-lg bg-gradient-to-br from-primary-500 to-primary-600"
-                   disabled={!currentMatch}
+                  disabled={!currentMatch || loading}
                  >
                    <UserPlus className="h-6 w-6" />
                  </Button>
@@ -214,14 +214,14 @@ export function MatchScreen() {
            </div>
            
            <div className="text-center mt-3">
-             <p className="text-xs text-secondary-500">
-               Swipe left to skip • Tap 🤝 to connect
-             </p>
+            <p className="text-xs text-secondary-500">
+              Swipe left to skip • Tap 🤝 to connect
+            </p>
            </div>
          </motion.div>
       </div>
       
-      <Navigation />
+      
     </motion.div>
   );
 }

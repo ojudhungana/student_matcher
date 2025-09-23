@@ -1,3 +1,4 @@
+﻿// Content container with optional padding, shadow, and animation.
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -38,12 +39,12 @@ export function Card({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className={baseClasses}
+        className={`${baseClasses} card-hover`}
       >
         {children}
       </motion.div>
     );
   }
 
-  return <div className={baseClasses}>{children}</div>;
+  return <div className={`${baseClasses} card-hover`}>{children}</div>;
 }

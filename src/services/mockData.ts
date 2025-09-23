@@ -1,3 +1,4 @@
+﻿// Mock users, matches, connections, and helpers for development.
 import { UserProfile, MatchSuggestion, Connection } from '@/types';
 
 // Mock user profiles for development

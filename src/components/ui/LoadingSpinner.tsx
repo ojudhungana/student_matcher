@@ -1,4 +1,5 @@
-import React from 'react';
+﻿import React from 'react';
+// Inline SVG spinner for loading states.
 
 interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg';

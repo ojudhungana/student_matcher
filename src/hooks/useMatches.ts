@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+// Manage suggested matches, pagination, and connect/skip actions.
+import { useState, useEffect, useRef } from 'react';
 import { MatchSuggestion, PaginatedResponse } from '@/types';
 import { apiService } from '@/services/api';
 import { getMockMatchSuggestions } from '@/services/mockData';
@@ -23,6 +24,7 @@ export function useMatches(): UseMatchesResult {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const inFlightRef = useRef<Set<string>>(new Set());
 
   const loadSuggestions = async (page: number, append = false) => {
     setLoading(true);
@@ -72,6 +74,9 @@ export function useMatches(): UseMatchesResult {
   };
 
   const sendMatch = async (userId: string) => {
+    // Prevent duplicate requests for the same user
+    if (inFlightRef.current.has(userId)) return;
+    inFlightRef.current.add(userId);
     try {
       if (env.IS_DEV) {
         // Simulate API call in development
@@ -93,10 +98,15 @@ export function useMatches(): UseMatchesResult {
       const message = err instanceof Error ? err.message : 'Failed to send connection request';
       setError(message);
       toast.error(message);
+    } finally {
+      inFlightRef.current.delete(userId);
     }
   };
 
   const skipMatch = async (userId: string) => {
+    // Prevent duplicate skip requests for the same user
+    if (inFlightRef.current.has(userId)) return;
+    inFlightRef.current.add(userId);
     try {
       if (env.IS_DEV) {
         // Simulate API call in development
@@ -115,6 +125,8 @@ export function useMatches(): UseMatchesResult {
     } catch (err) {
       console.error('Error skipping match:', err);
       // Don't show error toast for skip action, just log it
+    } finally {
+      inFlightRef.current.delete(userId);
     }
   };
 

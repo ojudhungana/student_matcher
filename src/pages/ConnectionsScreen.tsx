@@ -1,11 +1,11 @@
+// Shows the user's connections with stats, list, and empty state.
 import { useConnections } from '@/hooks/useConnections';
-import { Navigation } from '@/components/layout/Navigation';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Button } from '@/components/ui/Button';
 import { Users, MessageCircle, Calendar, Star, BookOpen } from 'lucide-react';
 import { formatRelativeTime } from '@/utils';
+import { motion } from 'framer-motion';
 
 export function ConnectionsScreen() {
   const { connections, loading, refresh } = useConnections();
@@ -37,7 +37,7 @@ export function ConnectionsScreen() {
             </Button>
           </div>
         </div>
-        <Navigation />
+        
       </div>
     );
   }
@@ -69,8 +69,14 @@ export function ConnectionsScreen() {
 
           {/* Connections List */}
           <div className="space-y-3">
-            {connections.map((connection) => (
-              <Card key={connection.id} className="hover:shadow-md transition-shadow">
+            {connections.map((connection, idx) => (
+              <motion.div
+                key={connection.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.04, type: 'spring', stiffness: 220, damping: 22 }}
+              >
+              <Card className="transition-all hover:shadow-lg hover:-translate-y-0.5">
                 <div className="flex items-start space-x-4">
                   <Avatar
                     src={connection.user.profilePicture}
@@ -85,7 +91,7 @@ export function ConnectionsScreen() {
                           {connection.user.name}
                         </h3>
                         <p className="text-sm text-secondary-600">
-                          {connection.user.major} • {connection.user.year}
+                          {connection.user.major} {'\u2022'} {connection.user.year}
                         </p>
                       </div>
                       
@@ -110,7 +116,7 @@ export function ConnectionsScreen() {
                           {connection.sharedInterests.slice(0, 3).map((interest) => (
                             <span
                               key={interest}
-                              className="px-2 py-0.5 bg-secondary-100 text-secondary-700 text-xs rounded-full"
+                              className="px-2 py-0.5 bg-secondary-100 text-secondary-700 text-xs rounded-full hover:bg-secondary-200 transition-colors"
                             >
                               {interest}
                             </span>
@@ -135,7 +141,7 @@ export function ConnectionsScreen() {
                           {connection.sharedClasses.map((className) => (
                             <span
                               key={className}
-                              className="px-2 py-0.5 bg-primary-100 text-primary-700 text-xs rounded-full"
+                              className="px-2 py-0.5 bg-primary-100 text-primary-700 text-xs rounded-full hover:bg-primary-200 transition-colors"
                             >
                               {className}
                             </span>
@@ -158,12 +164,13 @@ export function ConnectionsScreen() {
                   </div>
                 </div>
               </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </div>
       
-      <Navigation />
+      
     </div>
   );
 }

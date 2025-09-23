@@ -1,3 +1,4 @@
+// Axios client for backend API with Supabase auth integration.
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { supabase } from '@/config/supabase';
 import { env } from '@/config/env';
@@ -47,23 +48,36 @@ class ApiService {
     return Promise.reject(error);
   }
 );
-  }
+}
 
-  // Auth endpoints
+  // Auth endpoints (backend_evan compatibility)
   async getCurrentUser(): Promise<ApiResponse<UserProfile>> {
-    const response = await this.client.get('/auth/me');
+    const response = await this.client.get('/profiles/me');
+    if ('profile' in response.data) {
+      return { data: response.data.profile } as ApiResponse<UserProfile>;
+    }
     return response.data;
   }
 
   // Profile endpoints
   async getProfile(userId?: string): Promise<ApiResponse<UserProfile>> {
-    const endpoint = userId ? `/profile/${userId}` : '/profile';
-    const response = await this.client.get(endpoint);
+    // Fallback to current user if no id provided
+    if (!userId) {
+      const response = await this.client.get('/profiles/me');
+      return { data: response.data.profile } as ApiResponse<UserProfile>;
+    }
+    // If needed, implement a backend route to fetch others' profiles.
+    const response = await this.client.get(`/profiles/${userId}`);
     return response.data;
   }
 
   async updateProfile(data: ProfileFormData): Promise<ApiResponse<UserProfile>> {
-    const response = await this.client.put('/profile', data);
+    // backend_evan uses POST /profiles to upsert
+    const response = await this.client.post('/profiles', data);
+    // backend returns { profile }
+    if ('profile' in response.data) {
+      return { data: response.data.profile } as ApiResponse<UserProfile>;
+    }
     return response.data;
   }
 
@@ -84,24 +98,30 @@ class ApiService {
     page = 1,
     limit = 10
   ): Promise<PaginatedResponse<MatchSuggestion>> {
-    const response = await this.client.get('/match/suggestions', {
-      params: { page, limit },
-    });
-    return response.data;
+    // backend_evan provides a single top suggestion at /match/next
+    const response = await this.client.get('/match/next');
+    const candidate = response.data?.candidate;
+    const data = candidate ? [candidate] : [];
+    return {
+      data,
+      pagination: { page: 1, totalPages: 1, total: data.length },
+    } as PaginatedResponse<MatchSuggestion>;
   }
 
   async sendMatchRequest(
     targetUserId: string
   ): Promise<ApiResponse<MatchRequest>> {
-    const response = await this.client.post('/match/connect', {
-      targetUserId,
+    // backend_evan expects { target_id } at /match/like
+    const response = await this.client.post('/match/like', {
+      target_id: targetUserId,
     });
     return response.data;
   }
 
   async skipMatch(targetUserId: string): Promise<ApiResponse<void>> {
-    const response = await this.client.post('/match/skip', {
-      targetUserId,
+    // backend_evan expects { target_id } at /match/pass
+    const response = await this.client.post('/match/pass', {
+      target_id: targetUserId,
     });
     return response.data;
   }
@@ -111,10 +131,15 @@ class ApiService {
     page = 1,
     limit = 20
   ): Promise<PaginatedResponse<Connection>> {
-    const response = await this.client.get('/connections', {
-      params: { page, limit },
-    });
-    return response.data;
+    // backend_evan: /match/matches returns { matches }
+    const response = await this.client.get('/match/matches');
+    const list: Connection[] = response.data?.matches || [];
+    // Simple client-side pagination
+    const start = (page - 1) * limit;
+    const data = list.slice(start, start + limit);
+    const total = list.length;
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    return { data, pagination: { page, totalPages, total } } as PaginatedResponse<Connection>;
   }
 
   async getConnection(connectionId: string): Promise<ApiResponse<Connection>> {

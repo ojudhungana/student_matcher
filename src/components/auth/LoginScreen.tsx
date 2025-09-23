@@ -1,3 +1,4 @@
+﻿// Authentication screen with university SSO and email/password login.
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
@@ -142,9 +143,9 @@ export function LoginScreen() {
           className="text-center space-y-2"
         >
           <div className="flex items-center justify-center space-x-6 text-sm text-secondary-600">
-            <span>✓ Verified students only</span>
-            <span>✓ Safe & secure</span>
-            <span>✓ Free to use</span>
+            <span>âœ“ Verified students only</span>
+            <span>âœ“ Safe & secure</span>
+            <span>âœ“ Free to use</span>
           </div>
         </motion.div>
       </motion.div>

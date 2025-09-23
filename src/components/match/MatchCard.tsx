@@ -1,3 +1,4 @@
+// Swipeable profile card showing a suggested match and shared context.
 import React from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { MatchSuggestion } from '@/types';
@@ -67,7 +68,7 @@ export function MatchCard({ match, onSwipeLeft, onSwipeRight, isTop = false }: M
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-semibold text-lg">{user.name}</div>
-                  <div className="text-sm opacity-90">{user.age} • {user.year} • {user.major}</div>
+              <div className="text-sm opacity-90">{user.age} {'\u2022'} {user.year} {'\u2022'} {user.major}</div>
                 </div>
                 {(sharedInterests.length > 0 || sharedClasses.length > 0) && (
                   <div className="text-right">
