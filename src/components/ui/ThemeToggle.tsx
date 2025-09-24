@@ -3,21 +3,26 @@ import { Moon, Sun } from 'lucide-react';
 type Theme = 'light' | 'dark';
 
 function getInitialTheme(): Theme {
+  // Default
   if (typeof window === 'undefined') return 'light';
+  // Restores user's theme preference if applicable
   const saved = localStorage.getItem('theme');
   if (saved === 'light' || saved === 'dark') return saved as Theme;
+  // Defaults to system preference if applicable
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
 export default function ThemeToggle({ floating = false }: { floating?: boolean }) {
+  // Keeps track of the current theme
   const [theme, setTheme] = React.useState<Theme>(getInitialTheme());
 
   React.useEffect(() => {
     const root = document.documentElement;
-    if (theme === 'dark') { root.classList.add('dark'); localStorage.setItem('theme','dark'); }
-    else { root.classList.remove('dark'); localStorage.setItem('theme','light'); }
+    if (theme === 'dark') { root.classList.add('dark'); localStorage.setItem('theme','dark'); } // Turns dark theme on
+    else { root.classList.remove('dark'); localStorage.setItem('theme','light'); } // Turns light theme on
   }, [theme]);
 
+  // Toggles if user clicks button
   const toggle = () => setTheme(t => (t === 'dark' ? 'light' : 'dark'));
 
   const btn = (
@@ -36,6 +41,7 @@ export default function ThemeToggle({ floating = false }: { floating?: boolean }
   );
 
   if (!floating) return btn;
+  // Sets the button's location on screen
   return <div className="fixed right-4 bottom-24 z-50">{btn}</div>;
 }
 
