@@ -1,10 +1,5 @@
-/**
- * /api adapter routes
- * -------------------
- * This file exposes endpoints the new frontend expects, and maps them to our existing backend logic.
- * All routes (except /health elsewhere) require a Supabase Access Token in the Authorization header.
- */
-
+import { createClient } from '@supabase/supabase-js';
+import { z } from 'zod';
 import { Router } from 'express';
 import multer from 'multer';
 import { requireAuth } from '../middleware/auth.js';
@@ -13,15 +8,23 @@ import { scoreCandidate } from '../utils/matching.js';
 
 const router = Router();
 
-// Multer handles file uploads from forms (we keep files in memory; size capped at 8 MB)
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 
-// Our public Supabase Storage bucket for profile pictures
 const AVATAR_BUCKET = 'avatars';
+
+function getUserId(req: any): string | undefined {
+  return req.user?.id || req.auth?.user?.id || req.userId || req?.supabaseUser?.id;
+}
+
+const SettingsSchema = z.object({
+  notificationsEmail: z.boolean().optional(),
+  notificationsPush: z.boolean().optional(),
+  discoveryEnabled: z.boolean().optional(),
+});
 
 /* ------------------------- small helper utilities ------------------------- */
 
-// Turn YYYY-MM-DD birthday into a number (e.g., 21). If missing, return null.
+// Turns YYYY-MM-DD birthday into an age
 function calcAge(birthday?: string | null): number | null {
   if (!birthday) return null;
   const dob = new Date(birthday);
@@ -31,24 +34,24 @@ function calcAge(birthday?: string | null): number | null {
   return Math.abs(ageDt.getUTCFullYear() - 1970);
 }
 
-// Make stored year enum look nice for the UI
+// Capitalizes school year
 function capitalizeYear(y?: string | null) {
   if (!y) return null;
-  const m: Record<string,string> = { freshman:'Freshman', sophomore:'Sophomore', junior:'Junior', senior:'Senior', graduate:'Graduate', other:'Other' };
+  const m: Record<string, string> = { freshman:'Freshman', sophomore:'Sophomore', junior:'Junior', senior:'Senior', graduate:'Graduate', other:'Other' };
   return m[y] || y;
 }
 
-// Accept flexible year from UI and map to our enum
+// Accepts year from UI and maps to enum
 function normalizeYear(input?: string | null) {
   if (!input) return null;
   const key = input.toLowerCase();
-  const map: Record<string,string> = {
-    'freshman':'freshman','sophomore':'sophomore','junior':'junior','senior':'senior','graduate':'graduate','grad':'graduate','other':'other'
+  const map: Record<string, string> = {
+    freshman:'freshman', sophomore:'sophomore', junior:'junior', senior:'senior', graduate:'graduate', grad:'graduate', other:'other'
   };
   return map[key] || 'other';
 }
 
-// If UI only provides an age, fabricate an approximate birthday so age can be computed later
+// If UI only provides an age, fabricates an approximate birthday so age can be computed
 function approxBirthdayFromAge(age?: number | null): string | null {
   if (typeof age !== 'number' || !isFinite(age) || age <= 0) return null;
   const now = new Date();
@@ -56,21 +59,21 @@ function approxBirthdayFromAge(age?: number | null): string | null {
   return `${year}-07-01`; // mid-year placeholder
 }
 
-// Fetch my (or someone else’s) profile from the DB view
+// Fetches a user profile from the DB view
 async function getProfile(userId: string) {
   const { data, error } = await supabaseService.from('profiles_view').select('*').eq('id', userId).single();
   if (error && error.code !== 'PGRST116') throw new Error(error.message);
   return data || null;
 }
 
-// Get a user’s interest tags as plain strings
+// Gets a user’s interest tags as plain strings
 async function getTags(userId: string): Promise<string[]> {
   const { data, error } = await supabaseService.from('user_tags_with_names').select('name').eq('user_id', userId);
   if (error) throw new Error(error.message);
   return (data || []).map(r => r.name);
 }
 
-// Quick completeness check used to guard matching
+// Checks if user profile is complete
 function isCompleteProfile(p: any): boolean {
   if (!p) return false;
   if (!p.name || !p.birthday || !p.major || !p.year || !p.commuter_status) return false;
@@ -79,15 +82,15 @@ function isCompleteProfile(p: any): boolean {
   return true;
 }
 
-// Convert DB profile + tags into the shape the new frontend expects
+// Converts DB profile + tags into the shape frontend expects
 function toUserProfile(p: any, tags: string[]) {
   return {
     id: p.id,
     email: p.email,
     name: p.name,
     age: calcAge(p.birthday) ?? 0,
-    ageRangeMin: 18, // not stored yet; placeholder for UI
-    ageRangeMax: 99, // not stored yet; placeholder for UI
+    ageRangeMin: 18, // placeholder
+    ageRangeMax: 99, // placeholder
     major: p.major,
     year: capitalizeYear(p.year) || 'Other',
     profilePicture: (Array.isArray(p.photos) && p.photos[0]) || p.photo_url || null,
@@ -95,14 +98,13 @@ function toUserProfile(p: any, tags: string[]) {
     classes: [], // not implemented yet
     bio: p.bio || '',
     university: 'University of Alabama in Huntsville',
-    isProfileComplete: isCompleteProfile(p)
+    isProfileComplete: isCompleteProfile(p),
   };
 }
 
 /* --------------------------------- AUTH ---------------------------------- */
-/** GET /api/auth/me
- *  Returns the signed-in user’s profile in the new UI shape.
- */
+
+// Returns the signed-in user’s profile in UI shape
 router.get('/auth/me', requireAuth, async (req, res) => {
   try {
     const me = req.user!;
@@ -116,9 +118,8 @@ router.get('/auth/me', requireAuth, async (req, res) => {
 });
 
 /* -------------------------------- PROFILE -------------------------------- */
-/** GET /api/profile
- *  My profile (same as /auth/me but under /profile).
- */
+
+// GETs User profile
 router.get('/profile', requireAuth, async (req, res) => {
   const me = req.user!;
   try {
@@ -131,9 +132,7 @@ router.get('/profile', requireAuth, async (req, res) => {
   }
 });
 
-/** GET /api/profile/:id
- *  Someone else’s public profile preview (for detail view).
- */
+// GETs other users' public profile preview
 router.get('/profile/:id', requireAuth, async (req, res) => {
   const id = req.params.id;
   try {
@@ -146,16 +145,14 @@ router.get('/profile/:id', requireAuth, async (req, res) => {
   }
 });
 
-/** PUT /api/profile
- *  Upserts the current user’s profile. Accepts flexible input from the new UI
- *  and maps it to our DB shape. Also replaces the user’s tags if provided.
- */
+// PUTs the current user’s profile. Accepts flexible input from the new UI
+//  and maps it to our DB shape. Also replaces the user’s tags if provided
 router.put('/profile', requireAuth, async (req, res) => {
   const me = req.user!;
   try {
     const body = req.body || {};
 
-    // Normalize common fields
+    // Normalizes common fields
     const major = body.major ?? '';
     const yearNorm = normalizeYear(body.year);
     const birthday = body.birthday || approxBirthdayFromAge(body.age) || null;
@@ -163,7 +160,7 @@ router.put('/profile', requireAuth, async (req, res) => {
     const photos = Array.isArray(body.photos) ? body.photos : undefined;
     const interests: string[] = Array.isArray(body.interests) ? body.interests : [];
 
-    // Replace tag set if provided
+    // Replaces tag set if provided
     if (interests.length) {
       const upserts = interests.map((name: string) => ({ name: String(name).toLowerCase().trim() })).filter(r => r.name);
       const { data: tagRows, error: tagErr } = await supabaseService.from('tags').upsert(upserts, { onConflict: 'name' }).select();
@@ -180,7 +177,7 @@ router.put('/profile', requireAuth, async (req, res) => {
       if (toInsert.length) await supabaseService.from('user_tags').insert(toInsert);
     }
 
-    // Upsert the profile row
+    // Upserts the profile row
     const row: any = {
       id: me.id,
       email: me.email,
@@ -207,14 +204,13 @@ router.put('/profile', requireAuth, async (req, res) => {
   }
 });
 
- //  Accepts file upload from user, stores it in Supabase Storage (public),
+// POSTs and Accepts file upload from user, stores it in Supabase
 router.post('/profile/upload-picture', requireAuth, upload.single('file'), async (req, res) => {
   const me = req.user!;
   const file = req.file;
   if (!file) return res.status(400).json({ error: 'file required' });
 
   try {
-    
     const ext = file.originalname.split('.').pop() || 'jpg';
     const path = `${me.id}/${Date.now()}.${ext}`;
 
@@ -231,6 +227,7 @@ router.post('/profile/upload-picture', requireAuth, upload.single('file'), async
   }
 });
 
+/* --------------------------- MATCHING / SUGGESTIONS --------------------------- */
 
 // Returns a list of best matches for user.
 router.get('/match/suggestions', requireAuth, async (req, res) => {
@@ -260,7 +257,10 @@ router.get('/match/suggestions', requireAuth, async (req, res) => {
 
     // User Tags
     const myTags = await getTags(me.id);
-    const { data: tagsRows } = await supabaseService.from('user_tags_with_names').select('user_id,name').in('user_id', candidates.map(c => c.id));
+    const { data: tagsRows } = await supabaseService
+      .from('user_tags_with_names')
+      .select('user_id,name')
+      .in('user_id', candidates.map(c => c.id));
     const tagMap = new Map<string, string[]>();
     (tagsRows || []).forEach(r => {
       const arr = tagMap.get(r.user_id) || [];
@@ -268,33 +268,37 @@ router.get('/match/suggestions', requireAuth, async (req, res) => {
       tagMap.set(r.user_id, arr);
     });
 
-    // Score candidates
+    // Scores candidates
     const meInput = { id: me.id, major: myProfile!.major, year: myProfile!.year, commuter_status: myProfile!.commuter_status, birthday: myProfile!.birthday, tags: myTags };
-    const scored = candidates.map(c => {
-      const cTags = tagMap.get(c.id) || [];
-      return {
-        candidate: c,
-        tags: cTags,
-        score: scoreCandidate(meInput, { id: c.id, major: c.major, year: c.year, commuter_status: c.commuter_status, birthday: c.birthday, tags: cTags })
-      };
-    }).sort((a,b) => b.score - a.score);
+    const scored = candidates
+      .map(c => {
+        const cTags = tagMap.get(c.id) || [];
+        return {
+          candidate: c,
+          tags: cTags,
+          score: scoreCandidate(meInput, { id: c.id, major: c.major, year: c.year, commuter_status: c.commuter_status, birthday: c.birthday, tags: cTags }),
+        };
+      })
+      .sort((a, b) => b.score - a.score);
 
     // Pagination
     const start = (page - 1) * limit;
     const pageItems = scored.slice(start, start + limit);
 
-    // Map to the frontend’s expected shape
-    const dataOut = await Promise.all(pageItems.map(async (item) => {
-      const user = toUserProfile(item.candidate, item.tags);
-      const shared = user.interests.filter((x: string) => myTags.includes(x));
-      return {
-        id: `sugg_${item.candidate.id}`,
-        user,
-        sharedInterests: shared,
-        sharedClasses: [],
-        compatibilityScore: Math.round(item.score)
-      };
-    }));
+    // Maps to the frontend’s shape
+    const dataOut = await Promise.all(
+      pageItems.map(async (item) => {
+        const user = toUserProfile(item.candidate, item.tags);
+        const shared = user.interests.filter((x: string) => myTags.includes(x));
+        return {
+          id: `sugg_${item.candidate.id}`,
+          user,
+          sharedInterests: shared,
+          sharedClasses: [],
+          compatibilityScore: Math.round(item.score),
+        };
+      })
+    );
 
     res.json({
       data: dataOut,
@@ -302,17 +306,15 @@ router.get('/match/suggestions', requireAuth, async (req, res) => {
         page,
         limit,
         total: scored.length,
-        totalPages: Math.ceil(scored.length / limit) || 1
-      }
+        totalPages: Math.ceil(scored.length / limit) || 1,
+      },
     });
   } catch (e: any) {
     res.status(500).json({ error: e.message || 'Failed' });
   }
 });
 
-/** POST /api/match/connect
- *  Alias for “like” a user.
- */
+// POSTs alias for liking someone
 router.post('/match/connect', requireAuth, async (req, res) => {
   const me = req.user!;
   const targetUserId = req.body?.targetUserId as string;
@@ -328,9 +330,7 @@ router.post('/match/connect', requireAuth, async (req, res) => {
   }
 });
 
-/** POST /api/match/skip
- *  Alias for “pass” a user (never show again).
- */
+// POSTs alias for passing on someone
 router.post('/match/skip', requireAuth, async (req, res) => {
   const me = req.user!;
   const targetUserId = req.body?.targetUserId as string;
@@ -348,7 +348,7 @@ router.post('/match/skip', requireAuth, async (req, res) => {
 
 /* ------------------------------- CONNECTIONS ----------------------------- */
 /** GET /api/connections
- *  List my mutual matches in a simple shape for the UI.
+// GETs and lists user's matches in shape of UI
  */
 router.get('/connections', requireAuth, async (req, res) => {
   const me = req.user!;
@@ -372,7 +372,7 @@ router.get('/connections', requireAuth, async (req, res) => {
         classes: [],
         bio: '',
         university: 'University of Alabama in Huntsville',
-        isProfileComplete: true
+        isProfileComplete: true,
       };
       return {
         id: m.match_id,
@@ -380,7 +380,7 @@ router.get('/connections', requireAuth, async (req, res) => {
         matchedAt: m.created_at,
         lastMessageAt: undefined,
         sharedInterests: [],
-        sharedClasses: []
+        sharedClasses: [],
       };
     });
 
@@ -390,9 +390,7 @@ router.get('/connections', requireAuth, async (req, res) => {
   }
 });
 
-/** GET /api/connections/:id
- *  Basic details for a single connection (other user’s face/name/photo).
- */
+//  GETs basic details of other user’s face/name/photo
 router.get('/connections/:id', requireAuth, async (req, res) => {
   const me = req.user!;
   const id = req.params.id;
@@ -420,12 +418,12 @@ router.get('/connections/:id', requireAuth, async (req, res) => {
         classes: [],
         bio: '',
         university: 'University of Alabama in Huntsville',
-        isProfileComplete: true
+        isProfileComplete: true,
       },
       matchedAt: data.created_at,
       lastMessageAt: undefined,
       sharedInterests: [],
-      sharedClasses: []
+      sharedClasses: [],
     };
     res.json({ data: out });
   } catch (e: any) {
@@ -433,13 +431,80 @@ router.get('/connections/:id', requireAuth, async (req, res) => {
   }
 });
 
-/* ------------------------------ simple stubs ----------------------------- */
-// Settings/account endpoints your UI might call; safe no-ops until we flesh them out
-router.put('/settings', requireAuth, async (_req, res) => {
-  res.json({ data: null, message: 'Settings update not implemented yet' });
+/* -------------------------- SETTINGS & ACCOUNT --------------------------- */
+
+router.put('/settings', requireAuth, async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+  const parsed = SettingsSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: 'Invalid payload', details: parsed.error.flatten() });
+
+  const { data: current, error: loadErr } = await supabaseService
+    .from('profiles')
+    .select('settings')
+    .eq('id', userId)
+    .single();
+  if (loadErr) return res.status(500).json({ error: loadErr.message });
+
+  const merged = { ...(current?.settings ?? {}), ...parsed.data };
+
+  const { data, error } = await supabaseService
+    .from('profiles')
+    .update({ settings: merged })
+    .eq('id', userId)
+    .select('settings')
+    .single();
+
+  if (error) return res.status(500).json({ error: error.message });
+  return res.status(200).json(data.settings);
 });
-router.delete('/account', requireAuth, async (_req, res) => {
-  res.json({ data: null, message: 'Account deletion not implemented yet' });
+
+const supabaseAdmin =
+  process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+    ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } })
+    : null;
+
+// DELETEs /api/account
+// Soft-deletes the profile and scrub non-required fields. Optionally hard-deletes Auth user
+router.delete('/account', requireAuth, async (req, res) => {
+  const userId = getUserId(req);
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+  const { error } = await supabaseService
+    .from('profiles')
+    .update({
+      deleted_at: new Date().toISOString(),
+      bio: null,
+      featured_tags: [],
+      photo_url: null,
+    } as any)
+    .eq('id', userId);
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  // Optional hard delete of the Auth user (server-only)
+  if (supabaseAdmin) {
+    try {
+      const { error: delErr } = await supabaseAdmin.auth.admin.deleteUser(userId);
+      if (delErr) console.error('admin deleteUser failed:', delErr);
+    } catch (e) {
+      console.error('admin deleteUser exception:', e);
+    }
+  }
+
+  return res.status(204).send();
+});
+
+/* ------------------------------ ROUTE ALIASES ---------------------------- */
+// Aliases to match frontend pluralized paths (GET only)
+router.get('/profiles/me', (_req, res) => {
+  res.redirect(308, '/api/profile');
+});
+
+router.get('/profiles/:id', (req, res) => {
+  res.redirect(308, `/api/profile/${encodeURIComponent(req.params.id)}`);
 });
 
 export default router;
+
