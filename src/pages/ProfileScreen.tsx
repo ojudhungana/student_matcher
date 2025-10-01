@@ -145,6 +145,30 @@ export function ProfileScreen() {
                   <div className="text-sm text-secondary-600">Looking for ages</div>
                 </div>
               </div>
+              
+              {profile.pronouns && (
+                <div className="flex items-center space-x-3">
+                  <User className="h-5 w-5 text-secondary-500" />
+                  <div>
+                    <div className="font-medium text-secondary-900">{profile.pronouns}</div>
+                    <div className="text-sm text-secondary-600">Pronouns</div>
+                  </div>
+                </div>
+              )}
+              
+              {profile.commuterStatus && (
+                <div className="flex items-center space-x-3">
+                  <MapPin className="h-5 w-5 text-secondary-500" />
+                  <div>
+                    <div className="font-medium text-secondary-900">
+                      {profile.commuterStatus === 'on-campus' && 'On-Campus'}
+                      {profile.commuterStatus === 'off-campus' && 'Off-Campus'}
+                      {profile.commuterStatus === 'commuter' && 'Commuter'}
+                    </div>
+                    <div className="text-sm text-secondary-600">Living Status</div>
+                  </div>
+                </div>
+              )}
             </div>
           </Card>
 

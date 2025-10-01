@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/services/api';
-import { COMMON_MAJORS, YEARS, COMMON_INTERESTS, ProfileFormData } from '@/types';
+import { COMMON_MAJORS, YEARS, COMMON_INTERESTS, PRONOUNS_OPTIONS, COMMUTER_STATUS_OPTIONS, ProfileFormData } from '@/types';
 
 export function ProfileSetupScreen() {
   const navigate = useNavigate();
@@ -22,6 +22,8 @@ export function ProfileSetupScreen() {
     ageRangeMax: profile?.ageRangeMax || 24,
     major: profile?.major || '',
     year: profile?.year || 'Freshman',
+    pronouns: profile?.pronouns || '',
+    commuterStatus: profile?.commuterStatus || undefined,
     interests: profile?.interests || [],
     classes: profile?.classes || [],
     bio: profile?.bio || '',
@@ -162,6 +164,28 @@ export function ProfileSetupScreen() {
                 >
                   {YEARS.map((y) => (
                     <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <select
+                  className="block w-full rounded-lg border border-secondary-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  value={form.pronouns || ''}
+                  onChange={(e) => handleChange('pronouns', e.target.value || undefined)}
+                >
+                  <option value="">Pronouns (Optional)</option>
+                  {PRONOUNS_OPTIONS.map((p) => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+                <select
+                  className="block w-full rounded-lg border border-secondary-300 px-3 py-2 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  value={form.commuterStatus || ''}
+                  onChange={(e) => handleChange('commuterStatus', e.target.value as any || undefined)}
+                >
+                  <option value="">Living Status (Optional)</option>
+                  {COMMUTER_STATUS_OPTIONS.map((status) => (
+                    <option key={status.value} value={status.value}>{status.label}</option>
                   ))}
                 </select>
               </div>

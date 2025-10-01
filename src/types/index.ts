@@ -9,6 +9,8 @@ export interface UserProfile {
   ageRangeMax: number;
   major: string;
   year: 'Freshman' | 'Sophomore' | 'Junior' | 'Senior' | 'Graduate';
+  pronouns?: string;
+  commuterStatus?: 'on-campus' | 'off-campus' | 'commuter';
   profilePicture?: string;
   interests: string[];
   classes: string[];
@@ -88,6 +90,8 @@ export interface ProfileFormData {
   ageRangeMax: number;
   major: string;
   year: UserProfile['year'];
+  pronouns?: string;
+  commuterStatus?: UserProfile['commuterStatus'];
   interests: string[];
   classes: string[];
   bio?: string;
@@ -133,6 +137,22 @@ export interface University {
 
 // Constants
 export const YEARS = ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Graduate'] as const;
+
+export const PRONOUNS_OPTIONS = [
+  'He/Him',
+  'She/Her',
+  'They/Them',
+  'He/They',
+  'She/They',
+  'Other',
+  'Prefer not to say',
+] as const;
+
+export const COMMUTER_STATUS_OPTIONS = [
+  { value: 'on-campus', label: 'On-Campus' },
+  { value: 'off-campus', label: 'Off-Campus' },
+  { value: 'commuter', label: 'Commuter' },
+] as const;
 
 export const COMMON_INTERESTS = [
   'Sports',
