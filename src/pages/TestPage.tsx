@@ -4,7 +4,7 @@ export function TestPage() {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          ðŸŽ‰ Campus Connect App
+          ðŸŽ‰ ChargerCircle App
         </h1>
         <p className="text-gray-600 mb-2">
           âœ… All bugs fixed and app is working!
@@ -44,7 +44,7 @@ export function TestPage() {
         </div>
         <div className="mt-6 pt-4 border-t border-gray-200">
           <p className="text-xs text-gray-400">
-            Campus Connect v1.0.0 - All features working
+            ChargerCircle v1.0.0 - All features working
           </p>
         </div>
       </div>

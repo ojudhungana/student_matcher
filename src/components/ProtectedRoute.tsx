@@ -30,6 +30,12 @@ export function ProtectedRoute({ children, requireProfile = false }: ProtectedRo
   }
 
   if (requireProfile && (!profile || !profile.isProfileComplete)) {
+    // Debug: Log why we're redirecting
+    console.log('ProtectedRoute redirect to setup:', {
+      hasProfile: !!profile,
+      isComplete: profile?.isProfileComplete,
+      profile: profile
+    });
     // Redirect to profile setup if profile is incomplete
     return <Navigate to="/profile/setup" replace />;
   }

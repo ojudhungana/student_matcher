@@ -10,7 +10,7 @@ interface HeaderProps {
   showProfile?: boolean;
 }
 
-export function Header({ title = 'Campus Connect', showProfile = true }: HeaderProps) {
+export function Header({ title = 'ChargerCircle', showProfile = true }: HeaderProps) {
   const { user, profile, logout } = useAuth();
 
   const handleLogout = async () => {

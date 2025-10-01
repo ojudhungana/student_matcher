@@ -82,15 +82,21 @@ class ApiService {
   }
 
   async uploadProfilePicture(file: File): Promise<ApiResponse<{ url: string }>> {
-    const formData = new FormData();
-    formData.append('file', file);
+    // Step 1: Get a signed upload URL from backend
+    const ext = file.name.split('.').pop() || 'jpg';
+    const signedUrlResponse = await this.client.post('/profiles/photo/signed-url', { ext });
+    const { signedUrl, publicUrl } = signedUrlResponse.data;
     
-    const response = await this.client.post('/profile/upload-picture', formData, {
+    // Step 2: Upload file directly to Supabase storage using signed URL
+    await fetch(signedUrl, {
+      method: 'PUT',
+      body: file,
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': file.type,
       },
     });
-    return response.data;
+    
+    return { data: { url: publicUrl } };
   }
 
   // Match endpoints
@@ -101,11 +107,37 @@ class ApiService {
     // backend_evan provides a single top suggestion at /match/next
     const response = await this.client.get('/match/next');
     const candidate = response.data?.candidate;
-    const data = candidate ? [candidate] : [];
+    
+    // Transform backend format to frontend MatchSuggestion format
+    const data = candidate ? [{
+      id: candidate.id,
+      user: {
+        id: candidate.id,
+        email: candidate.email,
+        name: candidate.name,
+        age: candidate.age,
+        ageRangeMin: candidate.ageRangeMin,
+        ageRangeMax: candidate.ageRangeMax,
+        major: candidate.major,
+        year: candidate.year,
+        profilePicture: candidate.profilePicture,
+        interests: candidate.interests || [],
+        classes: candidate.classes || [],
+        bio: candidate.bio,
+        university: candidate.university,
+        isProfileComplete: candidate.isProfileComplete,
+        createdAt: candidate.createdAt,
+        updatedAt: candidate.updatedAt,
+      },
+      sharedInterests: candidate.sharedInterests || [],
+      sharedClasses: candidate.sharedClasses || [],
+      compatibilityScore: candidate.compatibilityScore || 75,
+    }] : [];
+    
     return {
       data,
-      pagination: { page: 1, totalPages: 1, total: data.length },
-    } as PaginatedResponse<MatchSuggestion>;
+      pagination: { page: 1, limit: 10, total: data.length, totalPages: 1 },
+    };
   }
 
   async sendMatchRequest(
@@ -131,15 +163,55 @@ class ApiService {
     page = 1,
     limit = 20
   ): Promise<PaginatedResponse<Connection>> {
-    // backend_evan: /match/matches returns { matches }
+    // backend_evan: /match/matches returns { matches } from matches_with_profiles view
     const response = await this.client.get('/match/matches');
-    const list: Connection[] = response.data?.matches || [];
+    const matches = response.data?.matches || [];
+    
+    // Get current user's profile to determine which user in the match is the "other" user
+    const myProfile = await this.getProfile();
+    const myId = myProfile.data.id;
+    
+    // Transform backend matches to Connection format
+    const list: Connection[] = matches.map((match: any) => {
+      // Determine which user is the "other" user
+      const isUserA = match.user_a === myId;
+      const otherUserId = isUserA ? match.user_b : match.user_a;
+      const otherUserName = isUserA ? match.user_b_name : match.user_a_name;
+      const otherUserPhoto = isUserA ? match.user_b_photo : match.user_a_photo;
+      
+      return {
+        id: match.match_id,
+        user: {
+          id: otherUserId,
+          name: otherUserName,
+          profilePicture: otherUserPhoto,
+          // These fields aren't in the view, so we'll use defaults
+          email: '',
+          age: 0,
+          ageRangeMin: 18,
+          ageRangeMax: 24,
+          major: '',
+          year: 'Freshman',
+          interests: [],
+          classes: [],
+          bio: '',
+          university: 'UAH',
+          isProfileComplete: true,
+          createdAt: match.created_at,
+          updatedAt: match.created_at,
+        },
+        matchedAt: match.created_at,
+        sharedInterests: [],
+        sharedClasses: [],
+      };
+    });
+    
     // Simple client-side pagination
     const start = (page - 1) * limit;
     const data = list.slice(start, start + limit);
     const total = list.length;
     const totalPages = Math.max(1, Math.ceil(total / limit));
-    return { data, pagination: { page, totalPages, total } } as PaginatedResponse<Connection>;
+    return { data, pagination: { page, limit, totalPages, total } };
   }
 
   async getConnection(connectionId: string): Promise<ApiResponse<Connection>> {

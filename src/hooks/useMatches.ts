@@ -2,8 +2,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { MatchSuggestion, PaginatedResponse } from '@/types';
 import { apiService } from '@/services/api';
-import { getMockMatchSuggestions } from '@/services/mockData';
-import { env } from '@/config/env';
 import toast from 'react-hot-toast';
 
 interface UseMatchesResult {
@@ -31,14 +29,7 @@ export function useMatches(): UseMatchesResult {
     setError(null);
     
     try {
-      let response: PaginatedResponse<MatchSuggestion>;
-      
-      if (env.IS_DEV) {
-        // Use mock data in development
-        response = getMockMatchSuggestions(page, 10);
-      } else {
-        response = await apiService.getMatchSuggestions(page, 10);
-      }
+      const response = await apiService.getMatchSuggestions(page, 10);
       
       if (append) {
         setSuggestions(prev => [...prev, ...response.data]);
@@ -78,14 +69,8 @@ export function useMatches(): UseMatchesResult {
     if (inFlightRef.current.has(userId)) return;
     inFlightRef.current.add(userId);
     try {
-      if (env.IS_DEV) {
-        // Simulate API call in development
-        await new Promise(resolve => setTimeout(resolve, 500));
-        toast.success('Connection request sent!');
-      } else {
-        await apiService.sendMatchRequest(userId);
-        toast.success('Connection request sent!');
-      }
+      await apiService.sendMatchRequest(userId);
+      toast.success('Connection request sent!');
       
       // Remove the user from suggestions
       setSuggestions(prev => {
@@ -108,12 +93,7 @@ export function useMatches(): UseMatchesResult {
     if (inFlightRef.current.has(userId)) return;
     inFlightRef.current.add(userId);
     try {
-      if (env.IS_DEV) {
-        // Simulate API call in development
-        await new Promise(resolve => setTimeout(resolve, 200));
-      } else {
-        await apiService.skipMatch(userId);
-      }
+      await apiService.skipMatch(userId);
       
       // Remove the user from suggestions
       setSuggestions(prev => {

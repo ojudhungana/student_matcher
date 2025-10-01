@@ -4,11 +4,11 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 
-import profiles from './routes/profiles.js';
-import match from './routes/match.js';
+// Use new simplified routes that match frontend
+import profiles from './routes/profiles_new.js';
+import match from './routes/match_new.js';
 import messages from './routes/messages.js';
 import reports from './routes/reports.js';
-import upload from './routes/upload.js';
 
 const app = express();
 app.use(helmet());
@@ -22,7 +22,6 @@ app.use('/profiles', profiles);
 app.use('/match', match);
 app.use('/messages', messages);
 app.use('/moderation', reports);
-app.use('/profiles', upload);
 
 const port = Number(process.env.PORT || 4000);
 app.listen(port, () => {

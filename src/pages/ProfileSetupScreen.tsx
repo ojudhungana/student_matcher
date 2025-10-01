@@ -7,11 +7,11 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/services/api';
-import { COMMON_MAJORS, YEARS, ProfileFormData } from '@/types';
+import { COMMON_MAJORS, YEARS, COMMON_INTERESTS, ProfileFormData } from '@/types';
 
 export function ProfileSetupScreen() {
   const navigate = useNavigate();
-  const { profile } = useAuth();
+  const { profile, refreshProfile } = useAuth();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,6 +28,7 @@ export function ProfileSetupScreen() {
   }), [profile]);
 
   const [form, setForm] = useState<ProfileFormData>(initialValues);
+  const [classInput, setClassInput] = useState('');
 
   useEffect(() => {
     setForm(initialValues);
@@ -37,23 +38,64 @@ export function ProfileSetupScreen() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const toggleArrayValue = (field: 'interests' | 'classes', value: string) => {
+  const toggleInterest = (interest: string) => {
     setForm((prev) => {
-      const set = new Set(prev[field]);
-      if (set.has(value)) set.delete(value); else set.add(value);
-      return { ...prev, [field]: Array.from(set) };
+      const set = new Set(prev.interests);
+      if (set.has(interest)) {
+        set.delete(interest);
+      } else {
+        set.add(interest);
+      }
+      return { ...prev, interests: Array.from(set) };
     });
+  };
+
+  const addClass = (className: string) => {
+    if (className.trim()) {
+      setForm((prev) => ({
+        ...prev,
+        classes: [...new Set([...prev.classes, className.trim()])]
+      }));
+      setClassInput('');
+    }
+  };
+
+  const removeClass = (className: string) => {
+    setForm((prev) => ({
+      ...prev,
+      classes: prev.classes.filter(c => c !== className)
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Client-side validation
+    if (!form.name || !form.major || !form.age) {
+      setError('Please fill in all required fields (Name, Age, Major)');
+      return;
+    }
+    
     setSaving(true);
     setError(null);
     try {
-      await apiService.updateProfile(form);
-      navigate('/profile');
+      console.log('Submitting profile:', form);
+      const result = await apiService.updateProfile(form);
+      console.log('Profile saved successfully:', result);
+      
+      // Refresh the profile in AuthContext to get latest data
+      await refreshProfile();
+      console.log('Profile refreshed, navigating to /profile');
+      
+      // Small delay to ensure state updates propagate
+      await new Promise(resolve => setTimeout(resolve, 100));
+      navigate('/profile', { replace: true });
     } catch (err: any) {
-      setError(err?.message || 'Failed to save profile');
+      console.error('Profile save error:', err.response?.data || err);
+      const errorMsg = err.response?.data?.error?.fieldErrors 
+        ? JSON.stringify(err.response.data.error.fieldErrors)
+        : err.response?.data?.error || err?.message || 'Failed to save profile';
+      setError(errorMsg);
     } finally {
       setSaving(false);
     }
@@ -138,41 +180,28 @@ export function ProfileSetupScreen() {
 
           <Card>
             <h3 className="font-semibold text-secondary-900 mb-4">Interests</h3>
-            <div className="space-y-2">
-              <Input
-                placeholder="Add an interest and press Enter"
-                value={''}
-                onChange={() => {}}
-                onKeyDown={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const value = target.value.trim();
-                    if (value) {
-                      handleChange('interests', Array.from(new Set([...(form.interests || []), value])));
-                      target.value = '';
-                    }
-                  }
-                }}
-              />
-              {form.interests?.length ? (
-                <div className="flex flex-wrap gap-2">
-                  {form.interests.map((i) => (
-                    <span key={i} className="inline-flex items-center px-3 py-1 rounded-full bg-primary-100 text-primary-800 text-sm">
-                      {i}
-                      <button
-                        type="button"
-                        className="ml-2 text-primary-700 hover:text-primary-900"
-                        aria-label={`Remove ${i}`}
-                        onClick={() => handleChange('interests', form.interests.filter((x) => x !== i))}
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              ) : null}
+            <p className="text-sm text-secondary-600 mb-3">Select your interests (click to toggle)</p>
+            <div className="flex flex-wrap gap-2">
+              {COMMON_INTERESTS.map((interest) => (
+                <button
+                  key={interest}
+                  type="button"
+                  onClick={() => toggleInterest(interest)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                    form.interests.includes(interest)
+                      ? 'bg-primary-600 text-white hover:bg-primary-700'
+                      : 'bg-secondary-100 text-secondary-700 hover:bg-secondary-200'
+                  }`}
+                >
+                  {interest}
+                </button>
+              ))}
             </div>
+            {form.interests.length > 0 && (
+              <p className="text-sm text-secondary-600 mt-3">
+                Selected: {form.interests.length} interest{form.interests.length !== 1 ? 's' : ''}
+              </p>
+            )}
           </Card>
 
           <Card>
@@ -180,29 +209,32 @@ export function ProfileSetupScreen() {
             <div className="space-y-2">
               <Input
                 placeholder="Add a class (e.g., CS 201) and press Enter"
-                value={''}
-                onChange={() => {}}
+                value={classInput}
+                onChange={(e) => setClassInput(e.target.value)}
                 onKeyDown={(e) => {
-                  const target = e.target as HTMLInputElement;
                   if (e.key === 'Enter') {
                     e.preventDefault();
-                    const value = target.value.trim();
-                    if (value) {
-                      handleChange('classes', Array.from(new Set([...(form.classes || []), value])));
-                      target.value = '';
-                    }
+                    addClass(classInput);
                   }
                 }}
               />
-              {form.classes?.length ? (
+              {form.classes.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {form.classes.map((c) => (
-                    <span key={c} className="px-3 py-1 rounded-full bg-secondary-100 text-secondary-800 text-sm">
+                    <span key={c} className="inline-flex items-center px-3 py-1 rounded-full bg-secondary-100 text-secondary-800 text-sm">
                       {c}
+                      <button
+                        type="button"
+                        className="ml-2 text-secondary-700 hover:text-secondary-900"
+                        aria-label={`Remove ${c}`}
+                        onClick={() => removeClass(c)}
+                      >
+                        ×
+                      </button>
                     </span>
                   ))}
                 </div>
-              ) : null}
+              )}
             </div>
           </Card>
 

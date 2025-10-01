@@ -6,10 +6,10 @@ export const env = {
   SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key',
   
   // API
-  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api',
+  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000',
   
   // App
-  APP_NAME: 'Campus Connect',
+  APP_NAME: 'ChargerCircle',
   APP_VERSION: '1.0.0',
   
   // Development

@@ -30,7 +30,7 @@ describe('LoginScreen Component', () => {
   it('renders login form elements', () => {
     render(<LoginScreen />);
     
-    expect(screen.getByText('Campus Connect')).toBeInTheDocument();
+    expect(screen.getByText('ChargerCircle')).toBeInTheDocument();
     expect(screen.getByText('Find your college friends and study buddies')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sign in with university/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();

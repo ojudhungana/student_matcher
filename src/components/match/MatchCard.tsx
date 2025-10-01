@@ -27,7 +27,13 @@ export function MatchCard({ match, onSwipeLeft, onSwipeRight, isTop = false }: M
     }
   };
 
-  const { user, sharedInterests, sharedClasses, compatibilityScore } = match;
+  const { user, sharedInterests = [], sharedClasses = [], compatibilityScore } = match;
+
+  // Safety check - if user data is missing, don't render
+  if (!user) {
+    console.error('MatchCard: user data is missing', match);
+    return null;
+  }
 
   return (
     <motion.div

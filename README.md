@@ -13,7 +13,7 @@
 
 # Open http://localhost:4000/health -> you should see {"ok":true}
 =======
-# Campus Connect - Frontend
+# ChargerCircle - Frontend
 =======
 # ChargerCircle - Frontend
 >>>>>>> ff58fc09 (Update README.md)

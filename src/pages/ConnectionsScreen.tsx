@@ -3,6 +3,7 @@ import { useConnections } from '@/hooks/useConnections';
 import { Card } from '@/components/ui/Card';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Users, MessageCircle, Calendar, Star, BookOpen } from 'lucide-react';
 import { formatRelativeTime } from '@/utils';
 import { motion } from 'framer-motion';
@@ -10,9 +11,21 @@ import { motion } from 'framer-motion';
 export function ConnectionsScreen() {
   const { connections, loading, refresh } = useConnections();
 
-  // Avoid interstitial loading screen on navigation: render layout and, if needed,
-  // show content based on existing data; only show empty state when not loading.
+  // Show loading state
+  if (loading && connections.length === 0) {
+    return (
+      <div className="flex flex-col min-h-screen bg-secondary-50">
+        <div className="bg-white shadow-sm border-b border-secondary-200 p-4">
+          <h1 className="text-xl font-semibold text-center">Your Connections</h1>
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <LoadingSpinner size="lg" />
+        </div>
+      </div>
+    );
+  }
 
+  // Show empty state when there are no connections (after loading)
   if (!loading && connections.length === 0) {
     return (
       <div className="flex flex-col min-h-screen">
@@ -69,7 +82,7 @@ export function ConnectionsScreen() {
 
           {/* Connections List */}
           <div className="space-y-3">
-            {connections.map((connection, idx) => (
+            {connections.filter(c => c.user).map((connection, idx) => (
               <motion.div
                 key={connection.id}
                 initial={{ opacity: 0, y: 12 }}

@@ -132,7 +132,7 @@ export function SettingsScreen() {
 
           {/* Footer */}
           <div className="text-center text-xs text-secondary-500 pt-4">
-            <p>Campus Connect v1.0.0</p>
+            <p>ChargerCircle v1.0.0</p>
             <p className="mt-1">Made with {'\u2764\uFE0F'} for college students</p>
           </div>
         </div>

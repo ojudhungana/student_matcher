@@ -1,12 +1,13 @@
 ﻿// Swipeable discovery interface to connect or skip suggested matches.
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useMatches } from '@/hooks/useMatches';
 import { MatchCard } from '@/components/match/MatchCard';
 import { Button } from '@/components/ui/Button';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { X, UserPlus } from 'lucide-react';
 
 export function MatchScreen() {
+  const navigate = useNavigate();
   const { suggestions, loading, sendMatch, skipMatch } = useMatches();
 
   // Always show the first match since we remove matches from the array
@@ -27,18 +28,12 @@ export function MatchScreen() {
 
 
 
-  if (!loading && !currentMatch && suggestions.length === 0) {
+  // Show empty state when there are no matches (regardless of loading state)
+  if (!currentMatch && suggestions.length === 0) {
     return (
       <div className="flex flex-col min-h-screen">
         <div className="bg-white shadow-sm border-b border-secondary-200 p-4">
           <h1 className="text-xl font-semibold text-center">Discover People</h1>
-        </div>
-        <div className="bg-white border-b border-secondary-200 p-3">
-          <div className="max-w-sm mx-auto text-center">
-            <div className="text-sm text-secondary-500">
-              You've seen everyone available
-            </div>
-          </div>
         </div>
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center max-w-sm">
@@ -60,13 +55,13 @@ export function MatchScreen() {
             </div>
              <div className="space-y-3">
                <button
-                 onClick={() => window.location.href = '/profile'}
+                 onClick={() => navigate('/profile')}
                  className="w-full bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors"
                >
                  Update Profile Settings
                </button>
                <button
-                 onClick={() => window.location.href = '/connections'}
+                 onClick={() => navigate('/connections')}
                  className="w-full text-primary-600 text-sm hover:text-primary-700"
                >
                  View Your Connections
@@ -118,7 +113,7 @@ export function MatchScreen() {
                  {currentMatch.compatibilityScore}% match
                </span>
                <span className="text-secondary-600">
-                 {currentMatch.sharedInterests.length + currentMatch.sharedClasses.length} in common
+                 {(currentMatch.sharedInterests?.length || 0) + (currentMatch.sharedClasses?.length || 0)} in common
                </span>
              </motion.div>
           ) : (

@@ -2,8 +2,6 @@
 import { useState, useEffect } from 'react';
 import { Connection, PaginatedResponse } from '@/types';
 import { apiService } from '@/services/api';
-import { getMockConnections } from '@/services/mockData';
-import { env } from '@/config/env';
 import toast from 'react-hot-toast';
 
 interface UseConnectionsResult {
@@ -28,14 +26,7 @@ export function useConnections(): UseConnectionsResult {
     setError(null);
     
     try {
-      let response: PaginatedResponse<Connection>;
-      
-      if (env.IS_DEV) {
-        // Use mock data in development
-        response = getMockConnections(page, 20);
-      } else {
-        response = await apiService.getConnections(page, 20);
-      }
+      const response = await apiService.getConnections(page, 20);
       
       if (append) {
         setConnections(prev => [...prev, ...response.data]);

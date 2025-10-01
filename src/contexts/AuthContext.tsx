@@ -4,11 +4,10 @@ import { User } from '@supabase/supabase-js';
 import { supabase } from '@/config/supabase';
 import { UserProfile, AuthState } from '@/types';
 import { apiService } from '@/services/api';
-import { mockCurrentUser } from '@/services/mockData';
-import { env } from '@/config/env';
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string) => Promise<void>;
   loginWithUniversity: () => Promise<void>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -51,15 +50,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const fetchProfile = async (): Promise<UserProfile | null> => {
     try {
-      if (env.IS_DEV) {
-        // Use mock data in development
-        return mockCurrentUser;
-      }
+      console.log('Fetching profile from backend...');
       
-      const response = await apiService.getProfile();
+      // Add timeout to profile fetch
+      const profilePromise = apiService.getProfile();
+      const timeoutPromise = new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 5000)
+      );
+      
+      const response = await Promise.race([profilePromise, timeoutPromise]);
+      console.log('Profile fetched successfully');
       return response.data;
-    } catch (error) {
-      console.error('Error fetching profile:', error);
+    } catch (error: any) {
+      // If profile doesn't exist or backend error, return null (user needs to create profile)
+      console.error('Error fetching profile:', error?.response?.status || error?.message);
+      // Don't throw - just return null so app can continue
       return null;
     }
   };
@@ -83,83 +88,79 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setError(null);
     
     try {
-      // In development, simulate email login
-      if (env.IS_DEV) {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        // Simulate successful login with mock user
-        const mockUser = {
-          id: 'mock-user-id',
-          email: email,
-          email_confirmed_at: new Date().toISOString(),
-          user_metadata: {
-            university: mockCurrentUser.university,
-            name: mockCurrentUser.name,
-          },
-          app_metadata: {},
-          aud: 'authenticated',
-          created_at: new Date().toISOString(),
-        } as User;
-        
-        setUser(mockUser, mockCurrentUser);
-        setLoading(false);
-        return;
+      console.log('Attempting login...');
+      
+      // Add timeout protection
+      const loginPromise = supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Login timeout - please check your connection')), 10000)
+      );
+      
+      const { data, error } = await Promise.race([loginPromise, timeoutPromise]) as any;
+
+      if (error) {
+        console.error('Supabase login error:', error);
+        throw error;
       }
 
-      // Production Supabase login
-      const { data, error } = await supabase.auth.signInWithPassword({
+      if (data.user) {
+        console.log('Login successful, fetching profile...');
+        const profile = await fetchProfile();
+        setUser(data.user, profile);
+        console.log('Profile loaded, login complete');
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Login failed';
+      console.error('Login failed:', message, error);
+      setError(message);
+      throw error; // Re-throw so LoginScreen can handle it
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signup = async (email: string, password: string) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      console.log('Attempting signup...');
+      
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase signup error:', error);
+        throw error;
+      }
 
       if (data.user) {
-        const profile = await fetchProfile();
-        setUser(data.user, profile);
+        console.log('Signup successful, user created');
+        // Profile will be null for new users - they'll be redirected to profile setup
+        setUser(data.user, null);
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Login failed';
+      const message = error instanceof Error ? error.message : 'Signup failed';
+      console.error('Signup failed:', message, error);
       setError(message);
+      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   const loginWithUniversity = async () => {
-    console.log('University login clicked');
     setLoading(true);
     setError(null);
     
     try {
-      // In development, simulate university login
-      if (env.IS_DEV) {
-        console.log('Development mode - simulating login');
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Simulate successful login with mock user
-        const mockUser = {
-          id: 'mock-user-id',
-          email: mockCurrentUser.email,
-          email_confirmed_at: new Date().toISOString(),
-          user_metadata: {
-            university: mockCurrentUser.university,
-            name: mockCurrentUser.name,
-          },
-          app_metadata: {},
-          aud: 'authenticated',
-          created_at: new Date().toISOString(),
-        } as User;
-        
-        console.log('Setting mock user:', mockUser);
-        setUser(mockUser, mockCurrentUser);
-        console.log('Login successful');
-        return;
-      }
-
-      // Production OAuth flow
+      // OAuth flow with Google (or your university SSO provider)
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -175,6 +176,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'University login failed';
       setError(message);
+      throw error; // Re-throw so LoginScreen can handle it
     } finally {
       setLoading(false);
     }
@@ -197,53 +199,83 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   useEffect(() => {
-    // In development, skip Supabase session checks
-    if (env.IS_DEV) {
-      setLoading(false);
-      return;
-    }
-
-    // Get initial session (production only)
+    let isMounted = true;
+    
+    // Safety timeout - force loading to false after 5 seconds
+    const timeoutId = setTimeout(() => {
+      if (isMounted) {
+        console.warn('Auth loading timeout - forcing loading to false');
+        setLoading(false);
+      }
+    }, 5000);
+    
+    // Get initial session
     const getInitialSession = async () => {
       try {
+        console.log('Getting initial session...');
         const { data: { session } } = await supabase.auth.getSession();
         
+        if (!isMounted) return;
+        
         if (session?.user) {
+          console.log('User session found, fetching profile...');
           const profile = await fetchProfile();
+          if (!isMounted) return;
+          console.log('Profile fetched:', profile ? 'success' : 'null');
           setUser(session.user, profile);
+        } else {
+          // No session - user not logged in
+          console.log('No session found');
+          setUser(null, null);
         }
       } catch (error) {
         console.error('Error getting initial session:', error);
+        if (!isMounted) return;
         setError('Failed to initialize authentication');
+        setUser(null, null);
       } finally {
-        setLoading(false);
+        clearTimeout(timeoutId);
+        if (isMounted) {
+          console.log('Setting loading to false');
+          setLoading(false);
+        }
       }
     };
 
     getInitialSession();
 
-    // Listen for auth changes (production only)
+    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event);
         
+        if (!isMounted) return;
+        
         if (session?.user) {
           const profile = await fetchProfile();
+          if (!isMounted) return;
           setUser(session.user, profile);
         } else {
           setUser(null, null);
         }
         
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const value: AuthContextType = {
     ...state,
     login,
+    signup,
     loginWithUniversity,
     logout,
     refreshProfile,

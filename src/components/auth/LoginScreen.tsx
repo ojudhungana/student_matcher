@@ -1,5 +1,6 @@
 ﻿// Authentication screen with university SSO and email/password login.
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/Button';
@@ -9,7 +10,8 @@ import { Heart, GraduationCap } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export function LoginScreen() {
-  const { login, loginWithUniversity, loading } = useAuth();
+  const navigate = useNavigate();
+  const { login, signup, loginWithUniversity, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
@@ -23,7 +25,15 @@ export function LoginScreen() {
     }
 
     try {
-      await login(email, password);
+      if (isLogin) {
+        await login(email, password);
+        toast.success('Login successful!');
+        navigate('/match');
+      } else {
+        await signup(email, password);
+        toast.success('Account created! Please set up your profile.');
+        navigate('/profile/setup');
+      }
     } catch (error) {
       // Error is handled in the auth context
     }
@@ -32,6 +42,8 @@ export function LoginScreen() {
   const handleUniversityLogin = async () => {
     try {
       await loginWithUniversity();
+      toast.success('Login successful!');
+      navigate('/match');
     } catch (error) {
       // Error is handled in the auth context
     }
@@ -55,7 +67,7 @@ export function LoginScreen() {
             <Heart className="h-8 w-8 text-white" />
           </motion.div>
           <h1 className="text-3xl font-bold text-secondary-900 mb-2">
-            Campus Connect
+            ChargerCircle
           </h1>
           <p className="text-secondary-600">
             Find your college friends and study buddies
@@ -143,9 +155,9 @@ export function LoginScreen() {
           className="text-center space-y-2"
         >
           <div className="flex items-center justify-center space-x-6 text-sm text-secondary-600">
-            <span>âœ“ Verified students only</span>
-            <span>âœ“ Safe & secure</span>
-            <span>âœ“ Free to use</span>
+            <span>✓ Verified students only</span>
+            <span>✓ Safe & secure</span>
+            <span>✓ Free to use</span>
           </div>
         </motion.div>
       </motion.div>
