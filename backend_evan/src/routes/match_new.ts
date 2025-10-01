@@ -128,6 +128,8 @@ router.get('/next', requireAuth, async (req, res) => {
     ageRangeMax: top.age_range_max,
     major: top.major,
     year: top.year,
+    pronouns: top.pronouns,
+    commuterStatus: top.commuter_status,
     profilePicture: top.profile_picture,
     interests: top.interests || [],
     classes: top.classes || [],

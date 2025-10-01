@@ -21,7 +21,15 @@ export function ProfileScreen() {
   const { profile, loading } = useAuth();
   const navigate = useNavigate();
 
-  console.log('ProfileScreen render:', { hasProfile: !!profile, loading, isComplete: profile?.isProfileComplete });
+  console.log('ProfileScreen render:', { 
+    hasProfile: !!profile, 
+    loading, 
+    isComplete: profile?.isProfileComplete,
+    pronouns: profile?.pronouns,
+    commuterStatus: profile?.commuterStatus,
+    classes: profile?.classes,
+    fullProfile: profile
+  });
 
   if (loading) {
     return (
