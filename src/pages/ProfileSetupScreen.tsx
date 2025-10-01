@@ -81,13 +81,10 @@ export function ProfileSetupScreen() {
     setSaving(true);
     setError(null);
     try {
-      console.log('Submitting profile:', form);
       const result = await apiService.updateProfile(form);
-      console.log('Profile saved successfully:', result);
       
       // Refresh the profile in AuthContext to get latest data
       await refreshProfile();
-      console.log('Profile refreshed, navigating to /profile');
       
       // Small delay to ensure state updates propagate
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -231,17 +228,27 @@ export function ProfileSetupScreen() {
           <Card>
             <h3 className="font-semibold text-secondary-900 mb-4">Classes</h3>
             <div className="space-y-2">
-              <Input
-                placeholder="Add a class (e.g., CS 201) and press Enter"
-                value={classInput}
-                onChange={(e) => setClassInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    addClass(classInput);
-                  }
-                }}
-              />
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Add a class (e.g., CS 201)"
+                  value={classInput}
+                  onChange={(e) => setClassInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      addClass(classInput);
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => addClass(classInput)}
+                  disabled={!classInput.trim()}
+                >
+                  Add
+                </Button>
+              </div>
               {form.classes.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {form.classes.map((c) => (

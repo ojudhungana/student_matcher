@@ -64,8 +64,6 @@ class ApiService {
     // Fallback to current user if no id provided
     if (!userId) {
       const response = await this.client.get('/profiles/me');
-      console.log('🔍 API getProfile response:', response.data);
-      console.log('🔍 Profile data:', response.data.profile);
       return { data: response.data.profile } as ApiResponse<UserProfile>;
     }
     // If needed, implement a backend route to fetch others' profiles.
